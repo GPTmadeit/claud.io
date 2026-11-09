@@ -30,6 +30,17 @@ jobs:
           [ "v$v" = "${GITHUB_REF_NAME}" ] || { echo "package.json is $v but tag is ${GITHUB_REF_NAME}"; exit 1; }
           grep -q "CLAUDIO_VERSION = '$v'" app/index.html || { echo "app/index.html version not synced (npm run version:sync)"; exit 1; }
 
+      # Create the release first: electron-builder uploads the installer and the
+      # portable exe in parallel and would otherwise race into two releases.
+      - name: Create release
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          notes="release-notes/${GITHUB_REF_NAME}.md"; [ -f "$notes" ] || { echo "Claud.io ${GITHUB_REF_NAME#v}" > /tmp/notes.md; notes=/tmp/notes.md; }
+          gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 || gh release create "$GITHUB_REF_NAME" --title "Claud.io ${GITHUB_REF_NAME#v}" --notes-file "$notes" --verify-tag
+
       - name: Build and publish
         if: startsWith(github.ref, 'refs/tags/v')
         env:
@@ -60,6 +71,6 @@ jobs:
           sha256sum *.exe > SHA256SUMS.txt
           cat SHA256SUMS.txt
           gh release upload "$GITHUB_REF_NAME" SHA256SUMS.txt --clobber
-          notes="../release-notes/${GITHUB_REF_NAME}.md"
-          if [ -f "$notes" ]; then gh release edit "$GITHUB_REF_NAME" --title "Claud.io ${GITHUB_REF_NAME#v}" --notes-file "$notes"; fi
+          n=$(gh api "repos/${GITHUB_REPOSITORY}/releases" --jq "[.[] | select(.tag_name == \"${GITHUB_REF_NAME}\")] | length")
+          [ "$n" = "1" ] || { echo "expected 1 release for ${GITHUB_REF_NAME}, found $n"; exit 1; }
           gh release edit "$GITHUB_REF_NAME" --draft=false --latest

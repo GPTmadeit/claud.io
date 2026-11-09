@@ -3,3 +3,4 @@ dist/
 vendor/
 tools/node_modules/
 *.log
+tools/dev-app-update.yml
