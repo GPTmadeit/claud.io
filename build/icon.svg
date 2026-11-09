@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1d1840"/><stop offset=".55" stop-color="#0f1020"/><stop offset="1" stop-color="#071a1a"/></linearGradient>
+    <radialGradient id="b1" cx=".22" cy=".18" r=".7"><stop offset="0" stop-color="#7c6cff" stop-opacity=".55"/><stop offset="1" stop-color="#7c6cff" stop-opacity="0"/></radialGradient>
+    <radialGradient id="b2" cx=".88" cy=".92" r=".6"><stop offset="0" stop-color="#00d2a8" stop-opacity=".45"/><stop offset="1" stop-color="#00d2a8" stop-opacity="0"/></radialGradient>
+    <linearGradient id="sheen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <radialGradient id="star" cx="50%" cy="50%" r="52%"><stop offset="0" stop-color="#fff"/><stop offset=".42" stop-color="#d9d3ff"/><stop offset="1" stop-color="#7c6cff"/></radialGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5"/></filter>
+    <clipPath id="r"><rect x="64" y="64" width="896" height="896" rx="200"/></clipPath>
+  </defs>
+  <g clip-path="url(#r)">
+    <rect width="1024" height="1024" fill="url(#bg)"/>
+    <rect width="1024" height="1024" fill="url(#b1)"/>
+    <rect width="1024" height="1024" fill="url(#b2)"/>
+    <rect width="1024" height="1024" fill="url(#sheen)"/>
+    <g transform="translate(512 512) scale(6.2) translate(-50 -50)"><path d="M50 3C53.5 32 68 46.5 97 50C68 53.5 53.5 68 50 97C46.5 68 32 53.5 3 50C32 46.5 46.5 32 50 3Z" fill="#8f80ff" filter="url(#glow)" opacity=".85"/></g>
+  </g>
+  <rect x="65.5" y="65.5" width="893" height="893" rx="199" fill="none" stroke="#fff" stroke-opacity=".14" stroke-width="3"/>
+  <g transform="translate(512 512) scale(6.2) translate(-50 -50)">
+    <path d="M50 3C53.5 32 68 46.5 97 50C68 53.5 53.5 68 50 97C46.5 68 32 53.5 3 50C32 46.5 46.5 32 50 3Z" fill="url(#star)"/>
+    <circle cx="50" cy="50" r="5.5" fill="#fff"/>
+  </g>
+  <g transform="translate(770 250) scale(1.6) translate(-84 -16)">
+    <path d="M84 4C84.9 11.6 88.4 15.1 96 16C88.4 16.9 84.9 20.4 84 28C83.1 20.4 79.6 16.9 72 16C79.6 15.1 83.1 11.6 84 4Z" fill="#fff" opacity=".9"/>
+  </g>
+</svg>

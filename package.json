@@ -1,0 +1,95 @@
+{
+  "name": "claud-io",
+  "productName": "Claud.io",
+  "version": "1.0.0",
+  "description": "Claud.io – design, video, audio-reactive visuals and 3D in one studio. Created by ANRCY.",
+  "author": "ANRCY",
+  "homepage": "https://github.com/GPTmadeit/claud.io",
+  "main": "electron/main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "vendor": "node scripts/fetch-vendor.mjs",
+    "dist:win": "npm run vendor && electron-builder --win --x64 --publish never",
+    "release:win": "npm run vendor && electron-builder --win --x64 --publish always",
+    "version:sync": "node scripts/sync-version.mjs"
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.11"
+  },
+  "devDependencies": {
+    "electron": "45.2.3",
+    "electron-builder": "^26.18.0"
+  },
+  "build": {
+    "appId": "com.anrcy.claudio",
+    "productName": "Claud.io",
+    "copyright": "Copyright © ANRCY",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "electron/**",
+      "app/index.html",
+      "build/icon.png",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "vendor",
+        "to": "vendor"
+      }
+    ],
+    "fileAssociations": [
+      {
+        "ext": "studio",
+        "name": "Claud.io Project",
+        "description": "Claud.io project"
+      }
+    ],
+    "win": {
+      "icon": "build/icon.png",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Claud.io",
+      "uninstallDisplayName": "Claud.io",
+      "artifactName": "Claud.io-Setup-${version}.${ext}",
+      "deleteAppDataOnUninstall": false
+    },
+    "portable": {
+      "artifactName": "Claud.io-${version}-Portable.${ext}"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "GPTmadeit",
+        "repo": "claud.io",
+        "releaseType": "release"
+      }
+    ]
+  },
+  "allowScripts": {
+    "electron@45.2.3": true,
+    "electron-winstaller": false
+  }
+}

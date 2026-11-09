@@ -1,0 +1,10 @@
+{
+  "name": "claud-io-tools",
+  "version": "1.0.0",
+  "description": "Dev helpers: headless UI probe and icon renderer",
+  "type": "commonjs",
+  "dependencies": {
+    "puppeteer-core": "^25.16.0"
+  },
+  "private": true
+}
