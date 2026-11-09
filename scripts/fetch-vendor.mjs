@@ -2,6 +2,7 @@
 // so the packaged app works offline from the first start.
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const J = 'https://cdn.jsdelivr.net/npm/';
 const FILES = [
@@ -18,10 +19,10 @@ const FILES = [
   J + 'paper@0.12.18/dist/paper-core.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
 ];
-const root = path.join(path.dirname(new URL(import.meta.url).pathname), '..', 'vendor');
+const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'vendor');
 let ok = 0;
 for (const url of FILES) {
-  const u = new URL(url), out = path.join(root, u.hostname, decodeURIComponent(u.pathname));
+  const u = new URL(url), out = path.join(root, u.hostname, ...decodeURIComponent(u.pathname).split('/').filter(Boolean));
   if (fs.existsSync(out)) { ok++; continue; }
   const r = await fetch(url);
   if (!r.ok) { console.warn('skip', r.status, url); continue; }

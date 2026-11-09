@@ -12,9 +12,9 @@ jobs:
   windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
@@ -31,9 +31,24 @@ jobs:
           grep -q "CLAUDIO_VERSION = '$v'" app/index.html || { echo "app/index.html version not synced (npm run version:sync)"; exit 1; }
 
       - name: Build and publish
+        if: startsWith(github.ref, 'refs/tags/v')
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run release:win
+
+      - name: Build only (manual run, no release)
+        if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+        run: npm run dist:win
+
+      - name: Keep build output
+        if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: claud-io-windows
+          path: |
+            dist/*.exe
+            dist/latest.yml
+          retention-days: 7
 
       - name: Checksums and release notes
         if: startsWith(github.ref, 'refs/tags/v')
