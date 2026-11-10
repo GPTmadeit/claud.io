@@ -23,6 +23,28 @@ protocol.registerSchemesAsPrivileged([
 
 if (!app.requestSingleInstanceLock()) { app.quit(); process.exit(0); }
 
+// ---------- graphics / hardware acceleration ----------
+// The studio renders 3D, shaders and video on the GPU. Chromium already uses it
+// by default; these switches also unlock GPUs on Chromium's blocklist, rasterize
+// 2D canvases on the GPU, prefer the discrete GPU on laptops and enable hardware
+// video encode/decode. If the GPU process keeps crashing, the app offers to fall
+// back to software rendering (settings.json → "gpu": false).
+const settingsFile = () => path.join(app.getPath('userData'), 'settings.json');
+function loadSettings() { try { return JSON.parse(fs.readFileSync(settingsFile(), 'utf8')); } catch { return {}; } }
+function saveSettings(patch) { const s = { ...loadSettings(), ...patch }; try { fs.mkdirSync(path.dirname(settingsFile()), { recursive: true }); fs.writeFileSync(settingsFile(), JSON.stringify(s, null, 2)); } catch {} return s; }
+const SETTINGS = loadSettings();
+const GPU_ON = SETTINGS.gpu !== false && !process.argv.includes('--disable-gpu');
+if (GPU_ON) {
+  app.commandLine.appendSwitch('ignore-gpu-blocklist');
+  app.commandLine.appendSwitch('enable-gpu-rasterization');
+  app.commandLine.appendSwitch('enable-zero-copy');
+  app.commandLine.appendSwitch('enable-accelerated-video-decode');
+  app.commandLine.appendSwitch('force_high_performance_gpu');
+  app.commandLine.appendSwitch('enable-features', 'CanvasOopRasterization,PlatformHEVCEncoderSupport,AcceleratedVideoEncoder');
+} else {
+  app.disableHardwareAcceleration();
+}
+
 let win = null, rendererReady = false;
 const pendingFiles = [];
 
@@ -62,6 +84,7 @@ function createWindow() {
   if (!process.env.CLAUDIO_SNAPSHOT) win.once('ready-to-show', () => win.show());
   ['resize', 'move', 'close'].forEach(ev => win.on(ev, saveState));
   win.loadURL('claudio://app/index.html');
+  win.webContents.on('did-finish-load', () => { const z = +loadSettings().zoom || 1; if (z !== 1) win.webContents.setZoomFactor(z); });
 
   // Pop-out windows (second-monitor preview, etc.) stay in-app; real web links open in the browser.
   win.webContents.setWindowOpenHandler(({ url }) => {
@@ -159,12 +182,60 @@ function setupUpdater() {
 }
 
 ipcMain.on('app-version', e => { e.returnValue = app.getVersion(); });
+ipcMain.on('gpu-enabled', e => { e.returnValue = GPU_ON; });
+ipcMain.handle('gpu-info', async () => {
+  let device = '';
+  try { const g = await app.getGPUInfo('basic'); const d = (g.gpuDevice || []).find(x => x.active) || (g.gpuDevice || [])[0]; if (d) device = d.deviceString || d.description || ''; } catch {}
+  return { enabled: GPU_ON, status: app.getGPUFeatureStatus(), device, crashes: gpuCrashes };
+});
+// window.prompt() replacement: a small modal window, answered synchronously
+const promptWaits = new Map();
+ipcMain.on('prompt-result', (_e, id, value) => { const w = promptWaits.get(id); if (w) w(value); });
+ipcMain.on('prompt-sync', (e, message, def, lang) => {
+  const parent = BrowserWindow.fromWebContents(e.sender), dark = nativeTheme.shouldUseDarkColors, id = crypto.randomUUID();
+  const pw = new BrowserWindow({ parent, modal: true, width: 460, height: 196, resizable: false, minimizable: false, maximizable: false, fullscreenable: false, frame: false, show: false, skipTaskbar: true,
+    backgroundColor: dark ? '#17181f' : '#f7f8fb', webPreferences: { preload: path.join(__dirname, 'prompt-preload.js'), contextIsolation: true, sandbox: true } });
+  let done = false;
+  const finish = v => { if (done) return; done = true; promptWaits.delete(id); e.returnValue = v == null ? null : String(v); if (!pw.isDestroyed()) pw.destroy(); };
+  promptWaits.set(id, finish); pw.on('closed', () => finish(null));
+  const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const L = lang === 'de' ? { ok: 'OK', cancel: 'Abbrechen' } : { ok: 'OK', cancel: 'Cancel' };
+  const fg = dark ? '#eceef4' : '#15161c', dim = dark ? '#9aa0ae' : '#5c6170', line = dark ? 'rgba(255,255,255,.12)' : 'rgba(0,0,0,.12)', field = dark ? 'rgba(255,255,255,.06)' : '#fff';
+  const html = `<!doctype html><meta charset="utf-8"><title>Claud.io</title><style>
+    *{box-sizing:border-box} body{margin:0;padding:18px 20px;font:13px/1.45 "Segoe UI",system-ui,sans-serif;color:${fg};background:transparent;-webkit-app-region:drag;border:1px solid ${line};height:100vh;border-radius:10px}
+    p{margin:0 0 10px;color:${dim}} input{width:100%;padding:9px 11px;border-radius:8px;border:1px solid ${line};background:${field};color:${fg};font:inherit;outline:none;-webkit-app-region:no-drag}
+    input:focus{border-color:#7c6cf0;box-shadow:0 0 0 3px rgba(124,108,240,.25)} .b{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+    button{-webkit-app-region:no-drag;padding:7px 16px;border-radius:8px;border:1px solid ${line};background:${field};color:${fg};font:inherit;cursor:pointer} button.p{background:#6c5ce7;border-color:#6c5ce7;color:#fff}
+  </style><p>${esc(message)}</p><input id="v" value="${esc(def)}" spellcheck="false"><div class="b"><button id="c">${L.cancel}</button><button class="p" id="o">${L.ok}</button></div>
+  <script>const v=document.getElementById('v'),id=${JSON.stringify(id)};v.focus();v.select();
+    const ok=()=>promptBridge.done(id,v.value),no=()=>promptBridge.done(id,null);
+    document.getElementById('o').onclick=ok;document.getElementById('c').onclick=no;
+    addEventListener('keydown',e=>{if(e.key==='Enter')ok();else if(e.key==='Escape')no();});</script>`;
+  pw.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(html));
+  pw.once('ready-to-show', () => pw.show());
+  // test hook: type a value and press OK automatically
+  if (process.env.CLAUDIO_PROMPT_TEST) pw.webContents.once('did-finish-load', () => pw.webContents.executeJavaScript(`document.getElementById('v').value=${JSON.stringify(process.env.CLAUDIO_PROMPT_TEST)};document.getElementById('o').click()`).catch(() => {}));
+});
+ipcMain.on('gpu-set', (_e, on) => { saveSettings({ gpu: !!on }); app.relaunch(); app.exit(0); });
+ipcMain.on('zoom-set', (_e, k) => { const z = Math.min(1.5, Math.max(0.75, +k || 1)); if (win && !win.isDestroyed()) win.webContents.setZoomFactor(z); saveSettings({ zoom: z }); });
 ipcMain.on('open-external', (_e, url) => { if (/^https:\/\//.test(url)) shell.openExternal(url); });
 ipcMain.on('renderer-ready', () => { rendererReady = true; while (pendingFiles.length) win.webContents.send('open-file', pendingFiles.shift()); });
 
 app.on('second-instance', (_e, argv) => {
   if (win) { if (win.isMinimized()) win.restore(); win.focus(); }
   queueFileArgs(argv);
+});
+
+let gpuCrashes = 0, gpuAsked = false;
+app.on('child-process-gone', (_e, d) => {
+  if (d.type !== 'GPU' || d.reason === 'clean-exit') return;
+  gpuCrashes++;
+  if (gpuCrashes >= 3 && GPU_ON && !gpuAsked && win && !win.isDestroyed()) {
+    gpuAsked = true;
+    dialog.showMessageBox(win, { type: 'warning', buttons: ['Use software rendering', 'Keep GPU'], defaultId: 0, cancelId: 1, title: 'Claud.io',
+      message: 'The graphics driver keeps crashing.', detail: 'Claud.io can restart without hardware acceleration. 3D and video export will be slower. You can switch it back on under About Claud.io.' })
+      .then(r => { if (r.response === 0) { saveSettings({ gpu: false }); app.relaunch(); app.exit(0); } });
+  }
 });
 
 app.whenReady().then(() => {

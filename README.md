@@ -19,8 +19,9 @@ Claud.io is a desktop creative studio for musicians and visual artists:
 
 - **Design**: covers, banners, logos and social formats with layers, pages, typography, patterns, topographic maps, brand kits and an image lab.
 - **Video**: a multi-track timeline with clips, transitions, keyframes, beat-synced cuts, lyrics, and MP4/WebM export.
-- **Audio-reactive visuals**: kick, snare, hi-hat, bass and loudness analysis drive visualizers, shaders, generators and clip modulation.
-- **3D studio**: 47 object types, 3D text, materials, lighting, orbiting companion objects and animated 3D clips for the timeline.
+- **Audio-reactive visuals**: kick, snare, hi-hat, bass, sub-bass, mids, presence, transients, stereo width and loudness drive 35 visualizer styles, 30 shader generators, video effects and a modulation matrix (threshold, curve, attack/release, range, profiles). Optional live microphone/line-in input.
+- **3D studio**: 47 object types, 3D text, materials, lighting, up to six independent orbit systems (circle, ellipse, atom, swarm, spiral, helix, figure eight, Lissajous, irregular) with per-companion editing, camera moves, and animated 3D clips for the timeline.
+- **Motion design**: keyframes with ten easing curves, custom Bezier, per-key easing, loop and ping-pong, reverse, offset, copy/paste, and motion presets.
 - **Audio workshop and converter**: mastering, slowed/sped-up versions, snippets and file conversion.
 
 Everything runs locally. Your projects stay on your computer.
@@ -49,7 +50,10 @@ The libraries the studio loads on demand (three.js, jsPDF, mp4box, paper.js and 
 ## Tips
 
 - `Ctrl+K` searches every command. `F1` opens Anrcy, the built-in help.
-- Appearance (palette icon in the top bar): dark, light, eye-friendly or system mode, accent colours, and the surface style: **Glass** (default), Smooth or Grain. Choose Smooth on older graphics cards.
+- Appearance (palette icon in the top bar): dark, light, eye-friendly or system mode, accent colours, surface style (**Glass**, Smooth or Grain), contrast, density, interface size, interface motion (Full, Subtle, Reduced, Off) and saved appearance profiles. Choose Smooth on older graphics cards.
+- Workspaces: Design, Video, Audio & visualizer, 3D, Minimal and Advanced presets, or save your own. Drag panel edges to resize them; double-click the left edge to collapse it.
+- Star commands in `Ctrl+K` to pin them to the top.
+- Click the logo to see whether hardware acceleration is active. It is on by default; turn it off there only if 3D or video looks broken.
 - English and German: the flag button in the top bar switches the language.
 - `F11` toggles full screen. `Ctrl+Shift+I` opens developer tools (useful for bug reports).
 

@@ -1204,6 +1204,22 @@
   .anrcy[data-mood="happy"] .ay-pupil { transform: scale(1.18); }
   .anrcy[data-mood="happy"] .ay-eye:nth-child(1) .ay-pupil { transform-origin:39px 52px; } .anrcy[data-mood="happy"] .ay-eye:nth-child(2) .ay-pupil { transform-origin:61px 52px; }
   .anrcy[data-mood="thinking"] .ay-pupil { opacity:0; } .anrcy[data-mood="thinking"] .ay-dot { opacity:1; }
+  /* Claud.io 1.1: weitere Gesichtsausdrücke */
+  .anrcy .ay-eye, .anrcy .ay-eyes, .anrcy .ay-rim, .anrcy .ay-pupil { transition: transform .22s cubic-bezier(.2,.8,.2,1), stroke .22s, opacity .18s; }
+  .anrcy[data-mood="success"] .ay-eye { transform: scaleY(.38); }
+  .anrcy[data-mood="success"] .ay-spark { opacity:1; animation: aySpark 1.2s ease-in-out 2; transform-origin:80px 20px; }
+  .anrcy[data-mood="success"] .ay-float { animation: ayHop .5s cubic-bezier(.2,.8,.2,1) 2; transform-origin: 50px 90px; }
+  .anrcy[data-mood="confused"] .ay-eyes { transform: rotate(-9deg); transform-origin: 50px 52px; }
+  .anrcy[data-mood="confused"] .ay-eye:nth-child(1) { transform: scale(.72); } .anrcy[data-mood="confused"] .ay-eye:nth-child(2) { transform: scale(1.12); }
+  .anrcy[data-mood="confused"] .ay-pupil { opacity:.35; }
+  .anrcy[data-mood="warning"] .ay-rim { stroke: #ffb020; }
+  .anrcy[data-mood="warning"] .ay-eye { transform: scale(1.16); }
+  .anrcy[data-mood="warning"] .ay-glow { opacity:.25; }
+  .anrcy[data-mood="warning"] .ay-float { animation: ayShake .36s ease-in-out 2; transform-origin: 50px 50px; }
+  .anrcy[data-mood="explaining"] .ay-pupil, .anrcy[data-mood="explaining"] .ay-dot { transform: translate(1.8px, -.6px); }
+  .anrcy[data-mood="explaining"] .ay-spark { opacity:.85; animation: aySpark 2.4s ease-in-out infinite; transform-origin:80px 20px; }
+  @keyframes ayHop { 40% { transform: translateY(-7px) scale(1.03, .97); } }
+  @keyframes ayShake { 25% { transform: translateX(-2.5px) rotate(-3deg); } 75% { transform: translateX(2.5px) rotate(3deg); } }
   .anrcy[data-mood="found"] .ay-spark { opacity:1; animation: aySpark 1.6s ease-in-out infinite; transform-origin:80px 20px; }
   .anrcy[data-mood="working"] .ay-eye:nth-child(1) .ay-pupil { transform-origin:39px 52px; animation: ayTurn 1.6s linear infinite; }
   .anrcy[data-mood="working"] .ay-eye:nth-child(2) .ay-pupil { transform-origin:61px 52px; animation: ayTurn 1.6s linear infinite; }
@@ -1695,6 +1711,130 @@
   .about-card .ab-upd { margin-top: 14px; padding: 10px 12px; border-radius: 12px; background: rgb(var(--hl) / .04); box-shadow: inset 0 0 0 1px rgb(var(--hl) / .07); font-size: 12px; color: var(--text-dim); min-height: 40px; }
   .about-card .ab-bar { height: 5px; border-radius: 3px; background: rgb(var(--hl) / .08); overflow: hidden; margin-top: 8px; display: none; }
   .about-card .ab-bar i { display:block; height:100%; width:0; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width .25s; }
+
+  /* ═════════ Claud.io 1.1 · Arbeitsbereiche, Dichte, Kontrast, Bewegung, neue Bedienelemente ═════════ */
+  /* Panel-Breiten aus dem Arbeitsbereich */
+  @media (min-width: 1101px) {
+  html[data-ws] .app { grid-template-columns: 70px var(--ws-lp, 248px) minmax(0,1fr) var(--ws-rp, 272px); }
+    html[data-ws] .ms { grid-template-columns: var(--ws-msl, 260px) minmax(0,1fr) var(--ws-msi, 290px); grid-template-rows: 52px minmax(0,1fr) var(--ws-tl, minmax(190px,38vh)); }
+    html[data-ws][data-ptex="glass"] .ms.show { grid-template-rows: 50px minmax(0,1fr) var(--ws-tl, minmax(190px,38vh)); }
+  }
+  @media (min-width: 1101px) { html[data-ws-hide~="lp"] .leftpanel, html[data-ws-hide~="msl"] .ms-lib { visibility: hidden; pointer-events: none; overflow: hidden; border: 0 !important; padding: 0 !important; } }
+  html.ws-dragging, html.ws-dragging * { cursor: col-resize !important; user-select: none !important; }
+  html.ws-dragging .ms-tl, html.ws-dragging .ms-tl * { cursor: row-resize !important; }
+  .ws-grip { position: absolute; z-index: 6; touch-action: none; outline: none; }
+  .ws-grip.ws-right { top: 0; bottom: 0; right: -6px; width: 10px; cursor: col-resize; }
+  .ws-grip.ws-left { top: 0; bottom: 0; left: -6px; width: 10px; cursor: col-resize; }
+  .ws-grip.ws-top { left: 0; right: 0; top: -6px; height: 10px; cursor: row-resize; }
+  .ws-grip::after { content: ''; position: absolute; border-radius: 3px; background: var(--accent); opacity: 0; transition: opacity var(--t-fast, .15s) ease; }
+  .ws-grip.ws-right::after, .ws-grip.ws-left::after { top: 30%; bottom: 30%; left: 4px; width: 2px; }
+  .ws-grip.ws-top::after { left: 30%; right: 30%; top: 4px; height: 2px; }
+  .ws-grip:hover::after, .ws-grip.drag::after, .ws-grip:focus-visible::after { opacity: .9; }
+  .ws-reopen { display: none; position: absolute; z-index: 7; width: 22px; height: 46px; padding: 0; border: 1px solid var(--line); border-radius: 0 10px 10px 0; background: var(--glass-solid, var(--panel)); color: var(--text-dim); cursor: pointer; align-items: center; justify-content: center; }
+  .ws-reopen svg { width: 14px; height: 14px; }
+  .ws-reopen:hover { color: var(--text); border-color: var(--accent); }
+  html[data-ws-hide~="lp"] .app > .ws-reopen[data-ws="lp"] { display: flex; left: 70px; top: 50%; }
+  html[data-ws-hide~="msl"] .ms > .ws-reopen[data-ws="msl"] { display: flex; left: 0; top: 40%; }
+  .ws-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .ws-chip { padding: 6px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel-2); color: var(--text-dim); font: inherit; font-size: 11.5px; cursor: pointer; transition: background var(--t-fast,.15s), color var(--t-fast,.15s), border-color var(--t-fast,.15s); }
+  .ws-chip:hover { color: var(--text); border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+  .ws-chip.on { background: color-mix(in srgb, var(--accent) 22%, transparent); color: var(--text); border-color: color-mix(in srgb, var(--accent) 60%, transparent); }
+  .ws-chip.mine { border-style: dashed; }
+  .ws-chip-wrap { display: inline-flex; align-items: center; }
+  .ws-chip-wrap .ws-chip { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+  .ws-chip-x { padding: 6px 7px; border: 1px solid var(--line); border-left: 0; border-radius: 0 999px 999px 0; background: var(--panel-2); color: var(--text-dim); font-size: 10px; cursor: pointer; }
+  .ws-chip-x:hover { color: var(--danger, #ff5a6a); }
+  .ws-row { display: flex; gap: 6px; margin-top: 8px; }
+  .ws-row input[type=text] { flex: 1; min-width: 0; }
+  .ws-row .mini { flex: 0 0 auto; padding-left: 10px; padding-right: 10px; }
+
+  /* Dichte */
+  html[data-density="compact"] .ctrl { margin-bottom: 6px; gap: 8px; }
+  html[data-density="compact"] .panel-body { padding: 10px 12px; }
+  html[data-density="compact"] .mini { padding: 5px 6px; }
+  html[data-density="compact"] .group { margin-bottom: 10px; }
+  html[data-density="compact"] .tbtn { padding-top: 5px; padding-bottom: 5px; }
+  html[data-density="spacious"] .ctrl { margin-bottom: 14px; gap: 12px; }
+  html[data-density="spacious"] .panel-body { padding: 18px 20px; }
+  html[data-density="spacious"] .mini { padding: 9px 8px; font-size: 12.5px; }
+  html[data-density="spacious"] .group { margin-bottom: 18px; }
+  html[data-density="spacious"] .ctrl label { font-size: 12.5px; }
+
+  /* Hoher Kontrast */
+  html[data-contrast="high"][data-theme="dark"] { --text: #ffffff; --text-dim: #d6d9e2; --line: rgba(255,255,255,.34); }
+  html[data-contrast="high"][data-theme="light"] { --text: #000000; --text-dim: #23252d; --line: rgba(0,0,0,.42); }
+  html[data-contrast="high"] :focus-visible { outline: 2px solid var(--accent) !important; outline-offset: 2px; }
+  html[data-contrast="high"] .hint-txt { color: var(--text-dim); }
+
+  /* Bewegung der Oberfläche (Leinwand, Visualizer und Videos sind JS-Zeichnungen und bleiben unberührt) */
+  html[data-motion="subtle"] *, html[data-motion="subtle"] *::before, html[data-motion="subtle"] *::after { animation-duration: .16s !important; transition-duration: .1s !important; animation-iteration-count: 1 !important; }
+  html[data-motion="subtle"] .anrcy, html[data-motion="subtle"] .anrcy * { animation-iteration-count: infinite !important; animation-duration: 3.2s !important; }
+  html[data-motion="reduced"] *, html[data-motion="reduced"] *::before, html[data-motion="reduced"] *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-property: opacity, background-color, border-color, color !important; transition-duration: .12s !important; }
+  html[data-motion="reduced"] :is(.tpl-tile, .shp-tile, .typo-tile, .tool, .tbtn, .mini):hover { transform: none !important; }
+  html[data-motion="full"] * { }
+
+  /* Mehrere Umläufe */
+  .orb-tabs { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; margin-bottom: 10px; }
+  .orb-tab { position: relative; padding: 6px 10px 6px 18px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel-2); color: var(--text-dim); font: inherit; font-size: 11.5px; cursor: pointer; }
+  .orb-tab::before { content: ''; position: absolute; left: 7px; top: 50%; width: 6px; height: 6px; margin-top: -3px; border-radius: 50%; background: var(--line); }
+  .orb-tab.live::before { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+  .orb-tab.on { color: var(--text); border-color: color-mix(in srgb, var(--accent) 60%, transparent); background: color-mix(in srgb, var(--accent) 16%, var(--panel-2)); }
+  .orb-tab.add { padding: 6px 10px; font-weight: 600; }
+  .orb-tab.add::before { display: none; }
+  .orb-tab-sp { flex: 1; }
+  .orb-tabs .mini { flex: 0 0 auto; padding: 5px 8px; }
+  .orb-inst { margin: 10px 0 6px; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; background: color-mix(in srgb, var(--panel-2) 70%, transparent); }
+  .orb-inst summary { cursor: pointer; font-size: 12px; color: var(--text-dim); list-style: none; }
+  .orb-inst summary::-webkit-details-marker { display: none; }
+  .orb-inst summary::before { content: '▸'; display: inline-block; margin-right: 6px; transition: transform var(--t-fast,.15s); }
+  .orb-inst[open] summary::before { transform: rotate(90deg); }
+  .orb-inst summary em { font-style: normal; color: var(--accent); margin-left: 4px; }
+  .orb-inst-pick { display: flex; flex-wrap: wrap; gap: 4px; margin: 8px 0; }
+  .orb-inst-pick button { min-width: 28px; padding: 4px 6px; border-radius: 6px; border: 1px solid var(--line); background: var(--panel-2); color: var(--text-dim); font: inherit; font-size: 11px; cursor: pointer; }
+  .orb-inst-pick button.mod { border-color: color-mix(in srgb, var(--accent) 50%, var(--line)); color: var(--text); }
+  .orb-inst-pick button.on { background: var(--accent); color: var(--on-accent, #fff); border-color: var(--accent); }
+  .orb-inst .ctrl .val, .mod-adv .ctrl .val { min-width: 38px; text-align: right; font-variant-numeric: tabular-nums; color: var(--text-dim); font-size: 11px; }
+
+  /* Modulations-Matrix */
+  .mod-row { grid-template-columns: 1fr auto 1fr; }
+  .mod-btns { display: inline-flex; gap: 4px; justify-self: end; }
+  .mod-btns .mini { flex: 0 0 auto; padding: 4px 8px; }
+  .mod-more.on { color: var(--text); border-color: var(--accent); }
+  .mod-adv { display: none; margin: -2px 0 6px; padding: 8px 9px 4px; border: 1px solid var(--line); border-top: 0; border-radius: 0 0 8px 8px; background: color-mix(in srgb, var(--panel-2) 60%, transparent); }
+  .mod-adv.open { display: block; }
+  .mod-adv .ctrl { margin-bottom: 6px; }
+  .mod-prof { margin-top: 10px; }
+  .mod-presets { display: flex !important; flex-wrap: wrap; gap: 5px; }
+  .mod-presets .mini { flex: 0 0 auto; padding: 5px 8px; }
+  .mod-prof .mini-btns { display: flex; flex-wrap: wrap; gap: 5px; }
+  .mod-prof .mini-btns .mini { flex: 1 1 auto; }
+  .mod-prof .ctrl .mini { flex: 0 0 auto; }
+
+  /* Keyframes */
+  .kf-row .kf-ease { max-width: 92px; font-size: 10.5px; padding: 2px 3px; }
+
+  /* Live-Eingang */
+  .ci-live { display: inline-flex; align-items: center; gap: 6px; margin-left: 6px; }
+  .ci-live.on { padding: 2px 4px 2px 8px; border-radius: 999px; border: 1px solid color-mix(in srgb, #ff3b5c 55%, transparent); background: color-mix(in srgb, #ff3b5c 12%, transparent); }
+  .ci-live-dot { width: 8px; height: 8px; border-radius: 50%; background: #ff3b5c; box-shadow: 0 0 8px #ff3b5c; animation: ciPulse 1.4s ease-in-out infinite; }
+  .ci-live-lbl { font-size: 11px; font-weight: 600; letter-spacing: .04em; color: var(--text); }
+  .ci-live-meter { --lv: 0; width: 46px; height: 5px; border-radius: 3px; background: color-mix(in srgb, var(--text) 14%, transparent); overflow: hidden; position: relative; }
+  .ci-live-meter::after { content: ''; position: absolute; inset: 0; transform-origin: left; transform: scaleX(var(--lv)); background: linear-gradient(90deg, #10c98f, #ffd23f 70%, #ff3b5c); }
+  .ci-live input[type=range] { width: 70px; accent-color: #ff3b5c; }
+  .ci-live .mini { flex: 0 0 auto; }
+  @keyframes ciPulse { 50% { opacity: .35; } }
+
+  /* Befehlspalette: Favoriten */
+  .cmdp-item { gap: 8px; }
+  .cmdp-fav { flex: 0 0 auto; width: 22px; height: 22px; padding: 0; border: 0; border-radius: 6px; background: transparent; color: var(--text-dim); font-size: 13px; line-height: 1; cursor: pointer; opacity: .45; transition: opacity var(--t-fast,.15s), color var(--t-fast,.15s); }
+  .cmdp-item:hover .cmdp-fav, .cmdp-item.on .cmdp-fav { opacity: .9; }
+  .cmdp-fav.on { color: #ffd23f; opacity: 1; }
+  .cmdp-item > span:first-of-type { flex: 1; }
+
+  /* About: Grafik-Status */
+  .about-gpu { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 10px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 10px; font-size: 12px; color: var(--text-dim); text-align: left; }
+  .about-gpu b { color: var(--text); font-weight: 600; }
+  .about-gpu .mini { flex: 0 0 auto; }
 </style>
 <script>
 /* v29: Erscheinungsbild sofort setzen (vor dem ersten Zeichnen)
@@ -1708,7 +1848,7 @@
     var ph = e.fixed && e.fixed !== 'auto' ? e.fixed : (m >= a && m < b ? 'day' : (m >= b && m < c ? 'evening' : 'night'));
     d.dataset.eye = ph; t = ph === 'day' ? 'light' : 'dark';
   } else if (t === 'system') t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-  d.dataset.theme = t; d.dataset.texture = u.texture || 'dots'; d.dataset.ptex = u.ptex || 'glass'; d.dataset.motion = u.motion || 'auto';
+  d.dataset.theme = t; d.dataset.texture = u.texture || 'dots'; d.dataset.ptex = u.ptex || 'glass'; d.dataset.motion = u.motion || 'auto'; d.dataset.density = u.density || 'comfortable'; d.dataset.contrast = u.contrast || 'normal';
   if (u.accent) { d.style.setProperty('--accent', u.accent); if (u.accent2) d.style.setProperty('--accent-2', u.accent2); if (u.onAccent) d.style.setProperty('--on-accent', u.onAccent); }
 } catch (e) {} })();
 
@@ -4916,6 +5056,179 @@ function toast(msg, kind = '', ms = 2200) {
    gespeichert, der Rückweg ist verlustfrei. Nutzerinhalte (Designtexte,
    Datei-, Ebenen- und Designnamen) werden nicht angefasst. */
 const I18N_EN = {
+// Claud.io 1.1
+"Qualität der Vorschau (Export und „In Design einfügen“ rendern immer in voller Qualität)": "Preview quality (export and “Insert into design” always render at full quality)",
+"Speichern": "Save",
+"Sub-Bass": "Sub-bass",
+"Tiefe Mitten": "Low mids",
+"Präsenz": "Presence",
+"Transienten": "Transients",
+"Stereobreite": "Stereo width",
+"Energie": "Energy",
+"Visualizer-Stärke": "Visualizer intensity",
+"Shader-Intensität": "Shader intensity",
+"Shader-Zoom": "Shader zoom",
+"Shader-Detail": "Shader detail",
+"Shader-Verzerrung": "Shader distortion",
+"Weich (exponentiell)": "Soft (exponential)",
+"Stark (logarithmisch)": "Strong (logarithmic)",
+"S-Kurve": "S-curve",
+"Schalter": "Switch",
+"Kick → Geometrie": "Kick → geometry",
+"Bass → Verformung": "Bass → deformation",
+"Hi-Hat → Funkeln": "Hi-hat → sparkle",
+"Snare → Licht": "Snare → light",
+"Takt → Drehung": "Bar → rotation",
+"Breite → Farbe": "Width → color",
+"Energie → Atmen": "Energy → breathing",
+"Transienten → Glitch": "Transients → glitch",
+"Profil konnte nicht gespeichert werden (Speicher voll?).": "Profile could not be saved (storage full?).",
+"Feineinstellung: Schwelle, Kurve, Attack/Release, Bereich": "Fine-tune: threshold, curve, attack/release, range",
+"Minimum": "Minimum",
+"Maximum": "Maximum",
+"Schwelle": "Threshold",
+"Attack (s)": "Attack (s)",
+"Release (s)": "Release (s)",
+"Stumm (vorübergehend aus)": "Mute (temporarily off)",
+"Profile": "Profiles",
+"Gespeicherte Profile …": "Saved profiles …",
+"Ersetzen": "Replace",
+"Profil zu diesem Clip hinzufügen": "Add the profile to this clip",
+"Modulationen dieses Clips durch das Profil ersetzen": "Replace this clip’s modulations with the profile",
+"Name für neues Profil": "Name for new profile",
+"Profil löschen": "Delete profile",
+"Modulationen kopiert.": "Modulations copied.",
+"Dieser Browser bietet keinen Zugriff auf Audio-Eingänge.": "This browser does not provide access to audio inputs.",
+"Audio-Eingang": "Audio input",
+"Zugriff auf das Mikrofon wurde verweigert. Du kannst ihn in den System- bzw. Browser-Einstellungen erlauben.": "Microphone access was denied. You can allow it in your system or browser settings.",
+"Kein Audio-Eingang gefunden.": "No audio input found.",
+"Live-Eingang beendet – Visuals folgen wieder dem Track.": "Live input stopped – visuals follow the track again.",
+"Live": "Live",
+"Eingangs-Verstärkung": "Input gain",
+"Live-Eingang beenden": "Stop live input",
+"Stopp": "Stop",
+"🎙 Live-Eingang": "🎙 Live input",
+"Visuals live auf Mikrofon oder Line-In reagieren lassen (fragt vorher um Erlaubnis; nichts wird aufgenommen). Beim Export gilt wieder der Track.": "Let visuals react live to a microphone or line-in (asks for permission first; nothing is recorded). Exports always use the track.",
+"Live-Eingang (Mikrofon) starten/beenden": "Start/stop live input (microphone)",
+"Frequenz-Spirale": "Frequency spiral",
+"Interferenz": "Interference",
+"Fraktal-Baum": "Fractal tree",
+"Kinetisches Feld": "Kinetic field",
+"3D-Landschaft": "3D landscape",
+"Stereo-Lissajous": "Stereo Lissajous",
+"Orbitale": "Orbitals",
+"3D-Tunnel": "3D tunnel",
+"Partikel-Kugel": "Particle sphere",
+"Minimal · Spirale": "Minimal · Spiral",
+"Minimal · Orbitale": "Minimal · Orbitals",
+"Geometrisch · Interferenz": "Geometric · Interference",
+"Geometrisch · Kugel": "Geometric · Sphere",
+"Organisch · Fraktal-Baum": "Organic · Fractal tree",
+"Organisch · Spirale": "Organic · Spiral",
+"Industriell · Topografie": "Industrial · Topography",
+"Industriell · Kinetisch": "Industrial · Kinetic",
+"Psychedelisch · Tunnel": "Psychedelic · Tunnel",
+"Psychedelisch · Interferenz": "Psychedelic · Interference",
+"Atmosphärisch · Kinetisch": "Atmospheric · Kinetic",
+"Atmosphärisch · Landschaft": "Atmospheric · Landscape",
+"Futuristisch · Landschaft": "Futuristic · Landscape",
+"Futuristisch · Lissajous": "Futuristic · Lissajous",
+"Tribal · Orbitale": "Tribal · Orbitals",
+"Tribal · Fraktal": "Tribal · Fractal",
+"Abstrakt · Topo-Neon": "Abstract · Neon topo",
+"Abstrakt · Stereo": "Abstract · Stereo",
+"Räumlich · Tunnel": "Spatial · Tunnel",
+"Räumlich · Partikel-Kugel": "Spatial · Particle sphere",
+"Domain Warp": "Domain warp",
+"Gyroid 3D": "Gyroid 3D",
+"Reaktion": "Reaction",
+"Voronoi-Kanten": "Voronoi edges",
+"Seide": "Silk",
+"Chromatische Aberration": "Chromatic aberration",
+"Bewegungsunschärfe": "Motion blur",
+"Lichtstrahlen": "Light rays",
+"Verzerren 2D": "2D distortion",
+"Weich (stark)": "Ease in-out (strong)",
+"Überschwingen": "Overshoot",
+"Elastisch": "Elastic",
+"Aufprall": "Bounce",
+"Bezier (eigene Kurve)": "Bezier (custom curve)",
+"Elastisch erscheinen": "Elastic pop-in",
+"Pulsieren": "Pulse",
+"Sanft schweben": "Gentle float",
+"Mechanische Drehung": "Mechanical rotation",
+"Kontrolliertes Chaos": "Controlled chaos",
+"Rhythmisch": "Rhythmic",
+"Kinoreif langsam": "Slow cinematic",
+"Geometrisch wachsen": "Geometric growth",
+"Verlauf ab diesem Keyframe": "Easing from this keyframe",
+"Wie Clip": "Same as clip",
+"Einmal": "Once",
+"Schleife": "Loop",
+"Pendeln": "Ping-pong",
+"Versatz (s)": "Offset (s)",
+"Keyframes kopieren": "Copy keyframes",
+"Ab hier wiederholen": "Repeat from here",
+"Alle Keyframes ab der Abspielposition wiederholen": "Repeat all keyframes from the playhead",
+"Keyframes kopiert – im nächsten Clip „Einfügen“.": "Keyframes copied – use “Paste” in the next clip.",
+"Kreis / Ellipse": "Circle / ellipse",
+"Helix": "Helix",
+"Acht": "Figure eight",
+"Unregelmäßig": "Irregular",
+"Auf & ab": "Up & down",
+"Schub (Phase)": "Push (phase)",
+"Fest": "Fixed",
+"Dolly": "Dolly",
+"Langsam heran": "Slow push-in",
+"Kran": "Crane",
+"Kreisfahrt": "Orbit",
+"Schwenk": "Sweep",
+"Handkamera": "Handheld",
+"Kamera": "Camera",
+"Ausgeschaltet": "Turned off",
+"Weiteren Umlauf hinzufügen – jeder hat eigene Bahn, Objekte, Material und Tempo": "Add another orbit – each has its own path, objects, material and speed",
+"Diesen Umlauf duplizieren": "Duplicate this orbit",
+"Diesen Umlauf entfernen": "Remove this orbit",
+"Bahn-Tiefe (Ellipse)": "Path depth (ellipse)",
+"Komplexität": "Complexity",
+"Bahn-Verformung": "Path deformation",
+"Audio für diesen Umlauf": "Audio for this orbit",
+"Einzelne Begleiter bearbeiten": "Edit single companions",
+"Größe (×)": "Size (×)",
+"Abstand (×)": "Distance (×)",
+"Versatz (°)": "Offset (°)",
+"Tempo (×)": "Speed (×)",
+"Diesen Begleiter ausblenden": "Hide this companion",
+"Alle zurücksetzen": "Reset all",
+"Wähle eine Nummer, um Größe, Abstand, Versatz und Tempo nur für diesen Begleiter zu ändern.": "Pick a number to change size, distance, offset and speed for that companion only.",
+"Bahn als Linie zeigen (nur Kreis und Atom)": "Show path as a line (circle and atom only)",
+"Großzügig": "Spacious",
+"Größe der Oberfläche": "Interface size",
+"Bewegung der Oberfläche": "Interface motion",
+"Dezent": "Subtle",
+"Reduziert": "Reduced",
+"Gilt nur für Menüs und Panels – Animationen in deinen Designs, Visualizern und Videos laufen immer. „Voll“ folgt der Systemeinstellung für weniger Bewegung.": "Applies to menus and panels only – animations in your designs, visualizers and videos always run. “Full” follows the system’s reduced-motion setting.",
+"Arbeitsbereich": "Workspace",
+"Vorlage": "Preset",
+"Eigener Arbeitsbereich": "Custom workspace",
+"Name für eigenen Bereich": "Name for custom workspace",
+"Name des Arbeitsbereichs": "Workspace name",
+"Aktuelle Panel-Breiten als neuen Arbeitsbereich speichern": "Save the current panel widths as a new workspace",
+"Umbenennen": "Rename",
+"Panel-Breiten dieses Bereichs zurücksetzen": "Reset this workspace’s panel widths",
+"Panel-Ränder lassen sich ziehen, Doppelklick klappt die linke Seite ein.": "Drag panel edges to resize; double-click collapses the left side.",
+"Audio & Visualizer": "Audio & visualizer",
+"Erweitert": "Advanced",
+"Ziehen: Breite ändern · Doppelklick: ein-/ausklappen": "Drag: resize · Double-click: collapse/expand",
+"Linkes Panel einblenden": "Show left panel",
+"Bibliothek einblenden": "Show library",
+"Hoher Kontrast": "High contrast",
+"Name für dein Profil": "Name for your profile",
+"Aktuelles sichern": "Save current",
+"Darstellungs-Profil gesichert.": "Appearance profile saved.",
+"Linkes Panel ein-/ausklappen": "Collapse/expand left panel",
+"Als Favorit oben anheften": "Pin to the top as a favorite",
+"Aus Favoriten entfernen": "Remove from favorites",
   'A-Moll': 'A minor',
   'Seitenanzahl': 'Pages',
   'Die KI hat diese Anfrage abgelehnt.': 'The AI declined this request.',
@@ -6496,6 +6809,13 @@ const I18N = { lang: 'de' };
 try { I18N.lang = (JSON.parse(localStorage.getItem('studio_ui_v1') || '{}').lang) || 'en'; } catch (e) {}
 // Tastennamen und häufige Wortteile, falls ein Satz nicht im Wörterbuch steht
 const I18N_PATTERNS = [
+  // Claud.io 1.1
+  [/^Umlauf (\d+)$/, 'Orbit $1'], [/^Umlauf (\d+) anzeigen$/, 'Show orbit $1'], [/^Begleiter (\d+)$/, 'Companion $1'], [/^Begleiter (\d+) zurücksetzen$/, 'Reset companion $1'],
+  [/^(\d+) angepasst$/, '$1 adjusted'], [/^Höchstens (\d+) Umläufe\.$/, 'At most $1 orbits.'], [/^Profil (\d+)$/, 'Profile $1'], [/^Mein Bereich (\d+)$/, 'My workspace $1'],
+  [/^Visualizer: (.+)$/, (_, a) => 'Visualizer: ' + T(a)], [/^Generator: (.+)$/, (_, a) => 'Generator: ' + T(a)], [/^Visualizer-Preset: (.+)$/, (_, a) => 'Visualizer preset: ' + T(a)],
+  [/^Arbeitsbereich: (.+)$/, (_, a) => 'Workspace: ' + T(a)], [/^Darstellung: (.+)$/, (_, a) => 'Appearance: ' + T(a)],
+  [/^Live-Eingang aktiv: (.+)$/, 'Live input active: $1'], [/^Live-Eingang konnte nicht gestartet werden: (.+)$/, 'Live input could not be started: $1'],
+  [/^Profil „(.+)“ gespeichert\.$/, 'Profile “$1” saved.'], [/^Profil „(.+)“ angewendet\.$/, (_, a) => `Profile “${T(a)}” applied.`], [/^(.+) \(Kopie\)$/, '$1 (copy)'],
   [/^\((\d+)× über ffmpeg statt Grafikkarte\)$/, '($1× via ffmpeg instead of the graphics card)'],
   [/^In „(.+)“ ist kein klarer Takt erkennbar – geschnitten wird nach einem festen Raster\. (\d+) Videos? in der Bibliothek\.$/, 'No clear beat detected in “$1” – cuts follow a fixed grid. $2 video(s) in the library.'],
   [/^(#[0-9a-fA-F]{3,8}) · Klick: anwenden · Rechtsklick: kopieren$/, '$1 · click: apply · right-click: copy'],
@@ -7111,7 +7431,7 @@ const UI_TEXTURES = [['dots','Punkte'],['grid','Raster'],['grain','Körnung'],['
 let UI = (() => { try { return JSON.parse(localStorage.getItem('studio_ui_v1') || '{}'); } catch (e) { return {}; } })();
 function saveUI() { try { localStorage.setItem('studio_ui_v1', JSON.stringify(UI)); } catch (e) {} }
 const resolveTheme = t => t === 'eye' ? (eyePhase() === 'day' ? 'light' : 'dark') : t === 'system' ? (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark') : (t || 'dark');
-function motionOff() { return document.documentElement.dataset.motion === 'off' || matchMedia('(prefers-reduced-motion: reduce)').matches; }
+function motionOff() { const m = document.documentElement.dataset.motion; return m === 'off' || m === 'reduced' || (m !== 'full' && matchMedia('(prefers-reduced-motion: reduce)').matches); }
 /* Moduswechsel mit kreisförmiger Überblendung vom angeklickten Knopf aus */
 function setTheme(t, origin) {
   UI.theme = t; saveUI();
@@ -7139,7 +7459,7 @@ function setAccent(a1, a2) {
 }
 function setUiAttr(key, val) { UI[key] = val; saveUI(); document.documentElement.dataset[key] = val; buildUiPop(); }
 function resetUI() { UI = {}; saveUI(); const d = document.documentElement; ['--accent','--accent-2','--on-accent'].forEach(v => d.style.removeProperty(v)); delete d.dataset.eye;
-  Object.assign(d.dataset, { texture: 'dots', ptex: 'glass', motion: 'auto' }); setTheme('dark', $('[data-act="theme"]')); buildUiPop(); }
+  Object.assign(d.dataset, { texture: 'dots', ptex: 'glass', motion: 'auto', density: 'comfortable', contrast: 'normal' }); if (typeof ciApplyScale === 'function') ciApplyScale(1); setTheme('dark', $('[data-act="theme"]')); buildUiPop(); }
 function buildUiPop() {
   const p = $('#uiPop'); if (!p) return;
   const th = UI.theme || 'dark', acc = (UI.accent || '#6c5ce7').toLowerCase(), tex = document.documentElement.dataset.texture || 'dots';
@@ -7151,7 +7471,13 @@ function buildUiPop() {
       <label class="acc-sw custom ${UI_ACCENTS.some(x => x[1] === acc) ? '' : 'on'}" title="Eigene Farbe" style="--c:${acc}"><input type="color" id="uiAccCustom" value="${acc}"></label></div>
     <label class="lbl">Textur der Arbeitsfläche</label><div class="uip-tex">${UI_TEXTURES.map(([v, l]) => `<button class="tex-tile ${tex === v ? 'on' : ''}" data-tex="${v}"><span class="tex-prev" data-texture="${v}"></span>${l}</button>`).join('')}</div>
     <label class="lbl">Oberfläche</label>${seg('ptex', document.documentElement.dataset.ptex || 'glass', [['glass','Glas'],['smooth','Glatt'],['grain','Mit Körnung']])}
-    <label class="lbl">Bewegung</label>${seg('motion', document.documentElement.dataset.motion || 'auto', [['auto','An (wie System)'],['off','Aus']])}
+    <label class="lbl">Kontrast</label>${seg('contrast', document.documentElement.dataset.contrast || 'normal', [['normal','Normal'],['high','Hoch']])}
+    <label class="lbl">Dichte</label>${seg('density', document.documentElement.dataset.density || 'comfortable', [['compact','Kompakt'],['comfortable','Normal'],['spacious','Großzügig']])}
+    <label class="lbl">Größe der Oberfläche</label>${seg('uiscale', String(UI.uiscale || 1), [['0.85','85 %'],['1','100 %'],['1.15','115 %'],['1.3','130 %']])}
+    <label class="lbl">Bewegung der Oberfläche</label>${seg('motion', document.documentElement.dataset.motion || 'auto', [['auto','Voll'],['subtle','Dezent'],['reduced','Reduziert'],['off','Aus']])}
+    <p class="hint-txt" style="margin-top:4px">Gilt nur für Menüs und Panels – Animationen in deinen Designs, Visualizern und Videos laufen immer. „Voll“ folgt der Systemeinstellung für weniger Bewegung.</p>
+    ${wsPanelHTML()}
+    ${apPanelHTML()}
     <label class="lbl">Anrcy</label>${seg('anrcyShow', (UI.anrcy && UI.anrcy.show === false) ? 'off' : 'on', [['on','Anzeigen'],['off','Ausblenden']])}
     <div style="height:6px"></div>${seg('anrcyTips', (UI.anrcy && UI.anrcy.tips === false) ? 'off' : 'on', [['on','Tipps zeigen'],['off','Keine Tipps']])}
     <label class="lbl">Mehrere Bildschirme</label>${seg('multi', (UI.multi && UI.multi.on) ? 'on' : 'off', [['off','Aus'],['on','An']])}
@@ -7178,6 +7504,7 @@ document.addEventListener('click', e => {
     if (key === 'anrcyShow') { UI.anrcy = UI.anrcy || { show: true }; UI.anrcy.show = sg.dataset.v === 'on';
       saveUI(); anrcyApplySettings(); buildUiPop(); if (UI.anrcy.show) anrcyMood('happy', 1400); return; }
     if (key === 'eyeFixed') { eyeSettings().fixed = sg.dataset.v; saveUI(); eyeTick(true); return; }
+    if (key === 'uiscale') { ciApplyScale(+sg.dataset.v); saveUI(); buildUiPop(); return; }
     if (key === 'theme') setTheme(sg.dataset.v, sg); else setUiAttr(key, sg.dataset.v); return; }
   const ac = e.target.closest('[data-acc]'); if (ac) { setAccent(ac.dataset.acc, ac.dataset.acc2); return; }
   const tx = e.target.closest('[data-tex]'); if (tx) { setUiAttr('texture', tx.dataset.tex); return; }
@@ -7490,9 +7817,9 @@ function anrcySVG() {
     <g class="ay-float"><path d="${ANRCY_BODY}" fill="url(#${k}b)"/><path class="ay-rim" d="${ANRCY_BODY}" fill="none" stroke="url(#${k}rim)" stroke-width="1.2"/>
     <g class="ay-eyes">${eye(39)}${eye(61)}</g><path class="ay-spark" d="${_aStar(80, 20, 6)}" fill="#cfc8ff"/></g></svg>`;
 }
-const ANRCY_MOODS = ['neutral', 'happy', 'thinking', 'found', 'working'];
+const ANRCY_MOODS = ['neutral', 'happy', 'thinking', 'found', 'working', 'success', 'confused', 'warning', 'explaining'];
 function anrcyMake(mood = 'neutral') { const el = document.createElement('span'); el.className = 'anrcy'; el.innerHTML = anrcySVG(); anrcySet(el, mood); return el; }
-function anrcySet(el, mood) { if (!el) return; el.dataset.mood = ANRCY_MOODS.includes(mood) ? mood : ({ idea: 'found', helpful: 'happy', excited: 'happy', confused: 'thinking' })[mood] || 'neutral'; }
+function anrcySet(el, mood) { if (!el) return; el.dataset.mood = ANRCY_MOODS.includes(mood) ? mood : ({ idea: 'found', helpful: 'happy', excited: 'happy', done: 'success', error: 'warning', explain: 'explaining' })[mood] || 'neutral'; }
 SPRITES.anrcy = () => anrcyMake('happy').outerHTML;
 SPRITES['anrcy-think'] = () => anrcyMake('thinking').outerHTML;
 SPRITES['anrcy-bang'] = () => anrcyMake('working').outerHTML;
@@ -10487,8 +10814,14 @@ const D3_AU_PRESETS = [['Aus', {}], ['Kick-Pump', { pulseSrc: 'kick', pulseAmt: 
 const D3_AU_KEYS = D3_AU_PAIRS.flatMap(([k]) => [k + 'Src', k + 'Amt']);
 /* Umlauf: Begleit-Objekte auf einer Bahn um das Hauptobjekt (Radius, Größe in „Gruppen-Radius 1“, Winkel in Grad) */
 const D3_ORB = { on: false, obj: 'sphere', text: '★', count: 3, mode: 'ring', r: 1.3, depthK: 0.6, incl: 16, tilt: -10, speed: 40, size: 0.15, phase: 0, face: 'spin', self: 60, bob: 0,
-  mat: 'same', color: '#ff2e88', line: false, lineW: 0.3, hideMain: false };
-const D3_ORB_MODES = [['ring', 'Eine Bahn'], ['atom', 'Atom'], ['swarm', 'Schwarm']];
+  mat: 'same', color: '#ff2e88', line: false, lineW: 0.3, hideMain: false,
+  // Claud.io: Bahnform-Parameter, Audio je Umlauf, einzelne Begleiter
+  pathK: 2, pathAmt: 0.5, auSrc: 'none', auAmt: 0.5, auTgt: 'radius', inst: null };
+const D3_ORB_MODES = [['ring', 'Kreis / Ellipse'], ['atom', 'Atom'], ['swarm', 'Schwarm'], ['spiral', 'Spirale'], ['helix', 'Helix'], ['eight', 'Acht'], ['lissa', 'Lissajous'], ['wander', 'Unregelmäßig']];
+const D3_ORB_PATHS = new Set(['spiral', 'helix', 'eight', 'lissa', 'wander']); // Bahnformen mit Form-Reglern
+const D3_ORB_AUTGT = [['radius', 'Radius'], ['size', 'Größe'], ['bob', 'Auf & ab'], ['spin', 'Schub (Phase)']];
+const D3_ORB_MAX = 6; // Umläufe je Objekt
+const D3_CAM_MOVES = [['none', 'Fest'], ['dolly', 'Dolly'], ['push', 'Langsam heran'], ['crane', 'Kran'], ['circle', 'Kreisfahrt'], ['sweep', 'Schwenk'], ['handheld', 'Handkamera']];
 const D3_ORB_FACE = [['spin', 'Eigendrehung'], ['out', 'Nach außen'], ['cam', 'Zur Kamera']];
 const D3_ORB_NO = new Set(['card', 'vinyl', 'speaker', 'particles', 'terrain', 'logo']);
 const D3_ORB_PRESETS = [['Planeten', { obj: 'sphere', count: 3, mode: 'ring', size: 0.13, line: true, face: 'spin', speed: 40 }], ['Sternenkranz', { obj: 'star', count: 6, mode: 'ring', size: 0.12, face: 'out', line: false, speed: 30 }],
@@ -10496,19 +10829,22 @@ const D3_ORB_PRESETS = [['Planeten', { obj: 'sphere', count: 3, mode: 'ring', si
   ['Atom', { obj: 'sphere', count: 3, mode: 'atom', size: 0.08, line: true, speed: 110, depthK: 1, incl: 70 }], ['Saturn', { obj: 'sphere', count: 30, mode: 'ring', size: 0.035, line: true, depthK: 1, incl: 20, speed: 25 }],
   ['Schwarm', { obj: 'crystal', count: 14, mode: 'swarm', size: 0.07, line: false, speed: 50, face: 'spin' }], ['Text-Ring', { obj: 'text', text: 'NEW', count: 3, mode: 'ring', size: 0.2, face: 'out', line: false, speed: 30 }]];
 /* Geometrie-relevante Werte: Änderung = neu aufbauen (Studio und Video-Clip) */
-const D3_GEO_KEYS = ['obj', 'text', 'font', 'fontData', 'depth', 'bevel', 'bprof', 'round', 'smooth', 'detail', 'mat', 'color', 'color2', 'light', 'arr', 'count', 'grad', 'ograd', 'track', 'lh', 'align', 'slant', 'bend', 'arc', 'orb'];
+const D3_GEO_KEYS = ['obj', 'text', 'font', 'fontData', 'depth', 'bevel', 'bprof', 'round', 'smooth', 'detail', 'mat', 'color', 'color2', 'light', 'arr', 'count', 'grad', 'ograd', 'track', 'lh', 'align', 'slant', 'bend', 'arc', 'orb', 'orbs'];
 const D3_ORB_REBUILD = new Set(['on', 'obj', 'text', 'count', 'mode', 'mat', 'color', 'line', 'lineW']);
 const D3 = { p: null, r: null, st: null, fonts: {}, editId: null, clipId: null, mode: 'design', busy: false, raf: 0, play: true, beat: true, t0: 0, tab: 'obj', lastLogo: null, bTok: 0, bg: 'check', wrapTarget: null, demo: '' };
 function d3Defaults(obj) {
   return { obj: obj || 'text', text: (state.release && state.release.artist) || 'NEON', font: 'helvetiker_bold', depth: 0.4, bevel: 0.5, detail: 0.5, mat: 'chrome', color: D3_MAT_COL.chrome, color2: '#ff2e88', light: 'studio', shadow: true,
     rx: -0.35, ry: 0.6, rz: 0, zoom: 1, glow: 0, arr: 'single', count: 8, spread: 1, grad: false,
     round: 0, bprof: 'round', smooth: D3_FACETED.has(obj) ? 0 : 0.35, bump: 'none', bumpAmt: 0.5, bumpSc: 1, ograd: false, gdir: 'v', rough: null, metal: null, expo: 1, lightAng: 0, fov: 30,
-    expr: 'calm', track: 0, lh: 1, align: 'center', slant: 0, bend: 0, arc: 0, wrap: false, wrapK: 1, orb: { ...D3_ORB },
+    expr: 'calm', track: 0, lh: 1, align: 'center', slant: 0, bend: 0, arc: 0, wrap: false, wrapK: 1, orb: { ...D3_ORB }, orbs: [], camMove: 'none', camMoveAmt: 0.5,
     mo: { ...D3_MO, spin: 24, float: 0.35, pulseSrc: 'kick', pulseAmt: 0.22 } };
 }
 /* Gespeicherte Werte (auch v46/v47) zu vollständigen Einstellungen ergänzen. Alte Objekte ohne „smooth“ behalten ihre Schattierung. */
-function d3Fill(p) { const d = d3Defaults(p && p.obj); const o = { ...d, ...(p || {}) }; o.mo = { ...D3_MO, ...((p && p.mo) || {}) }; o.orb = { ...D3_ORB, ...((p && p.orb) || {}) }; if (p && p.obj && p.smooth == null) o.smooth = 0; return o; }
-function d3HasMotion(p) { const m = p && p.mo; if (p && p.orb && p.orb.on && (+p.orb.speed || +p.orb.self)) return true; if (!m) return false; return !!(m.spin || m.tilt || m.float || m.wobble || m.bounce || m.orbit || m.deform > 0.001 || (m.intro && m.intro !== 'none') || D3_AU_PAIRS.some(([k]) => m[k + 'Src'] && m[k + 'Src'] !== 'none')); }
+function d3Fill(p) { const d = d3Defaults(p && p.obj); const o = { ...d, ...(p || {}) }; o.mo = { ...D3_MO, ...((p && p.mo) || {}) }; o.orb = { ...D3_ORB, ...((p && p.orb) || {}) }; o.orbs = ((p && p.orbs) || []).slice(0, D3_ORB_MAX - 1).map(x => ({ ...D3_ORB, ...x })); if (p && p.obj && p.smooth == null) o.smooth = 0; return o; }
+function d3OrbList(p) { return p ? [p.orb, ...(p.orbs || [])].filter(O => O && O.on && !D3_ORB_NO.has(O.obj)) : []; }
+function d3CurOrb() { const p = D3.p, i = D3.orbI || 0; if (i > 0 && p.orbs && p.orbs[i - 1]) return p.orbs[i - 1]; D3.orbI = 0; return p.orb; }
+function d3SetCurOrb(O) { const p = D3.p, i = D3.orbI || 0; if (i > 0 && p.orbs && p.orbs[i - 1]) p.orbs[i - 1] = O; else p.orb = O; }
+function d3HasMotion(p) { const m = p && p.mo; if (p && p.camMove && p.camMove !== 'none' && +p.camMoveAmt > 0) return true; if (d3OrbList(p).some(O => +O.speed || +O.self || O.mode === 'wander' || (O.auSrc && O.auSrc !== 'none'))) return true; if (!m) return false; return !!(m.spin || m.tilt || m.float || m.wobble || m.bounce || m.orbit || m.deform > 0.001 || (m.intro && m.intro !== 'none') || D3_AU_PAIRS.some(([k]) => m[k + 'Src'] && m[k + 'Src'] !== 'none')); }
 async function d3Load() {
   if (window.THREE && THREE.SVGLoader) return;
   await loadScript(D3_BASE + 'build/three.min.js'); await loadScript(D3_BASE + 'examples/js/loaders/SVGLoader.js');
@@ -10638,7 +10974,7 @@ function d3Inject(m, U, kind, iri) {
 
 /* ── Renderer, Bühne, Umgebungslicht ── */
 function d3NewRenderer(canvas) {
-  const r = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, preserveDrawingBuffer: true });
+  const r = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
   r.outputEncoding = THREE.sRGBEncoding; r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure = 1.05; r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap; r.setClearColor(0x000000, 0);
   r._d3env = {}; return r;
 }
@@ -10675,7 +11011,8 @@ function d3NewStage(r) {
 function d3ClearStage(st) {
   const seen = new Set(), kill = o => { if (o && !seen.has(o)) { seen.add(o); if (o.map) o.map.dispose(); if (o.gradientMap) o.gradientMap.dispose(); o.dispose && o.dispose(); } };
   st.objs.forEach(o => { if (o.parent) o.parent.remove(o); if (o.geometry) o.geometry.dispose(); (Array.isArray(o.material) ? o.material : [o.material]).forEach(kill); kill(o.customDepthMaterial); if (o.dispose) o.dispose(); });
-  st.objs = []; st.parts = []; st.mats = []; st.orb = null; st.ready = false; st.poseKey = null;
+  st.objs = []; st.parts = []; st.mats = []; st.orb = null; st.orbs = []; st.ready = false; st.poseKey = null;
+  if (st.orbG) [...st.orbG.children].forEach(c => st.orbG.remove(c));
 }
 function d3DisposeStage(st) { if (st._pc) { st._pc.forEach(d3DropParts); st._pc.clear(); } d3ClearStage(st); st.ground.geometry.dispose(); st.ground.material.dispose(); }
 
@@ -10724,9 +11061,9 @@ async function d3Build(st, p) {
   if (sigG && pc.has(sigG)) { ckey = sigG; hit = true; } else if (pc.has(sigF)) hit = true;
   if (hit) { parts = pc.get(ckey); pc.delete(ckey); pc.set(ckey, parts); } else { parts = await d3Parts(p, st); if (sigG && parts.every(pt => typeof pt.m === 'string')) ckey = sigG; }
   const _t1 = performance.now();
-  let orbParts = null; if (p.orb && p.orb.on && !D3_ORB_NO.has(p.orb.obj)) { try { orbParts = await d3OrbParts(p, st); } catch (e) { if (!st.quiet) toast(esc(e.message || String(e)), 'err', 3500); } }
+  const orbParts = []; for (const O of d3OrbList(p)) { try { orbParts.push(await d3OrbParts(p, st, O)); } catch (e) { if (!st.quiet) toast(esc(e.message || String(e)), 'err', 3500); } }
   const drop = list => (list || []).forEach(pt => { pt.g.dispose(); (Array.isArray(pt.m) ? pt.m : [pt.m]).forEach(m => m && m.dispose && m.dispose()); });
-  if (tok !== st.tok) { if (!hit) drop(parts); if (orbParts) orbParts.g.dispose(); return false; } // inzwischen neu angefordert
+  if (tok !== st.tok) { if (!hit) drop(parts); orbParts.forEach(op => op.g.dispose()); return false; } // inzwischen neu angefordert
   d3ClearStage(st);
   const U = st.U, arr = D3_NO_ARR.has(p.obj) ? 'single' : (p.arr || 'single'), n = arr === 'single' ? 1 : clamp(Math.round(p.count || 8), 2, 64), grad = arr !== 'single' && p.grad && !p.ograd && !['card', 'vinyl', 'speaker'].includes(p.obj);
   // Glättung: Normalen mit Knickwinkel (nur Flächen ohne gemeinsame Punkte; exakt gerundete Körper bringen eigene Normalen mit)
@@ -10752,15 +11089,15 @@ async function d3Build(st, p) {
   st.parts = parts; st.cloud = null; st.mats = [...mats];
   pc.set(ckey, parts); while (pc.size > 3) { const k = pc.keys().next().value, old = pc.get(k); pc.delete(k); if (old !== parts) d3DropParts(old); }
   if (arr === 'cloud') { const rnd = genRng(5 + n); st.cloud = [...Array(n)].map(() => { const u = rnd() * 2 - 1, a = rnd() * Math.PI * 2, d = Math.cbrt(rnd()); return { p: [Math.sqrt(1 - u * u) * Math.cos(a) * d, u * d, Math.sqrt(1 - u * u) * Math.sin(a) * d], r: [rnd() * 6.28, rnd() * 6.28, rnd() * 6.28], w: 0.2 + rnd() * 0.6, ph: rnd() * 6.28, k: 0.65 + rnd() * 0.5 }; }); }
-  if (orbParts) d3OrbBuild(st, p, orbParts, castable);
+  orbParts.forEach(op => d3OrbBuild(st, p, op, castable)); st.orb = st.orbs[0] || null;
   const L = D3_LC[p.light] || D3_LC.studio; st.L = L; st.light = p.light; st.isPoints = p.obj === 'particles'; st.ready = true;
   st.poseKey = null; d3Apply(st, p, 0, null, 1e9, { rest: true, aspect: 1 }); // legt auch den Boden unter das Objekt
   if (st === D3.st) { D3.stats.build = { total: performance.now() - _t0, parts: _t1 - _t0, crease: _t2 - _t2a, cache: hit }; d3DiagUpdate(); }
   return true;
 }
 /* Begleit-Objekte: eine Geometrie (Radius 1), eigenes Material (eigene Shader-Werte U2: ohne Verformung und Verlauf) */
-async function d3OrbParts(p, st) {
-  const O = { ...D3_ORB, ...(p.orb || {}) };
+async function d3OrbParts(p, st, O0) {
+  const O = { ...D3_ORB, ...(O0 || p.orb || {}) };
   const sp = { ...p, obj: O.obj, text: O.obj === 'text' ? (O.text || '★') : p.text, arr: 'single', bend: 0, arc: 0, align: 'center', ograd: false, orb: null,
     mat: O.mat === 'same' ? p.mat : O.mat, color: O.mat === 'same' ? p.color : O.color };
   const parts = await d3Parts(sp, { r: st.r, U: st.U2, quiet: true });
@@ -10777,12 +11114,13 @@ function d3OrbBuild(st, p, op, castable) {
   U2.uNorm.value = 1; U2.uRadial.value = 1; U2.uGradOn.value = 0;
   const mat = d3Material(op.sp, st.r, U2, { flat: op.flat }), sat = new THREE.InstancedMesh(op.g, mat, n); sat.instanceMatrix.setUsage(THREE.DynamicDrawUsage); sat.frustumCulled = false; sat.userData.orb = 'sat';
   sat.castShadow = castable && !['glass', 'crystal', 'wire', 'neon', 'jelly'].includes(op.sp.mat); if (sat.castShadow) sat.customDepthMaterial = d3Inject(new THREE.MeshDepthMaterial({ depthPacking: THREE.RGBADepthPacking }), U2, 'd', 0);
-  st.orbG.add(sat); st.objs.push(sat); st.mats.push(mat);
+  const og = new THREE.Group(); og.rotation.order = 'ZXY'; st.orbG.add(og);
+  og.add(sat); st.objs.push(sat); st.mats.push(mat);
   let line = null;
-  if (O.line && O.mode !== 'swarm') { const lg = new THREE.TorusGeometry(1, 0.006 + O.lineW * 0.03, 10, 220); lg.rotateX(Math.PI / 2);
-    line = new THREE.InstancedMesh(lg, mat, O.mode === 'atom' ? n : 1); line.instanceMatrix.setUsage(THREE.DynamicDrawUsage); line.frustumCulled = false; line.userData.orb = 'line'; st.orbG.add(line); st.objs.push(line); }
+  if (O.line && (O.mode === 'ring' || O.mode === 'atom')) { const lg = new THREE.TorusGeometry(1, 0.006 + O.lineW * 0.03, 10, 220); lg.rotateX(Math.PI / 2);
+    line = new THREE.InstancedMesh(lg, mat, O.mode === 'atom' ? n : 1); line.instanceMatrix.setUsage(THREE.DynamicDrawUsage); line.frustumCulled = false; line.userData.orb = 'line'; og.add(line); st.objs.push(line); }
   const rnd = genRng(17 + n), sw = [...Array(n)].map(() => ({ ix: (rnd() - 0.5) * Math.PI, iz: rnd() * Math.PI, k: 0.6 + rnd() * 0.8, rr: 0.8 + rnd() * 0.45, ph: rnd() * 6.283 }));
-  st.orb = { O, n, sat, line, sw };
+  (st.orbs = st.orbs || []).push({ O, n, sat, line, sw, g: og });
 }
 /* Teile-Hilfen für die Partikel */
 let _d3Dot = null;
@@ -10839,10 +11177,11 @@ function d3ClusterR0(st, p) {
     case 'spiral': return Math.hypot(1.2 + n * 0.22, (n - 1) * 0.21) * sp + 1; case 'cloud': return 1.6 * Math.cbrt(n) * sp + 1; }
   return 1;
 }
-function d3ClusterR(st, p) { const c0 = d3ClusterR0(st, p); if (!st.orb) return c0; const O = st.orb.O; return c0 * Math.max(1, (+O.r || 1.3) * (O.mode === 'swarm' ? 1.25 : 1) + (+O.size || 0.15) * 1.1); }
+function d3OrbReach(O) { const R = +O.r || 1.3, k = O.mode === 'swarm' ? 1.25 : O.mode === 'spiral' ? 1 + 0.45 * (+O.pathAmt || 0) : O.mode === 'wander' ? 1.35 : O.mode === 'helix' ? Math.hypot(1, 0.9 * (+O.pathAmt || 0)) : 1; return R * k + (+O.size || 0.15) * 1.1; }
+function d3ClusterR(st, p) { const c0 = d3ClusterR0(st, p); if (!st.orbs || !st.orbs.length) return c0; return c0 * Math.max(1, ...st.orbs.map(o => d3OrbReach(o.O))); }
 /* Tiefster Punkt der Umlaufbahn (in Gruppen-Einheiten), damit der Schatten-Boden darunter liegt */
 function d3OrbLow(O) {
-  const D = Math.PI / 180, R = +O.r || 1.3, s = +O.size || 0.15; if (O.mode !== 'ring') return (R * 1.25 + s) * 1.05;
+  const D = Math.PI / 180, R = +O.r || 1.3, s = +O.size || 0.15; if (O.mode !== 'ring') return (d3OrbReach(O) + (O.mode === 'swarm' ? 0 : R * 0.25)) * 1.05;
   const tz = (+O.tilt || 0) * D, inc = (+O.incl || 0) * D, dk = +O.depthK || 0.6; return R * Math.sqrt(Math.sin(tz) ** 2 + (dk * Math.sin(inc) * Math.cos(tz)) ** 2) + s + Math.abs(+O.bob || 0) * 0.3;
 }
 /* Zustand für Zeit t setzen. o.aspect, o.zoomK (zusätzlicher Zoom, z. B. Clipgröße), o.rest (Ruhepose) */
@@ -10851,7 +11190,7 @@ function d3Apply(st, p, t, au, local, o = {}) {
   const M = d3Motion(p, t, au, local, o.rest), U = st.U, U2 = st.U2, tm = st.tmp, cR0 = d3ClusterR0(st, p), cR = d3ClusterR(st, p), base = 1.45 / cR, D = Math.PI / 180;
   st.outer.rotation.set(M.ox, M.oy, M.oz); st.outer.position.set(0, M.y, 0); st.outer.scale.set(M.s * M.sx, M.s * M.sy, M.s * M.sx);
   st.inner.rotation.set(p.rx || 0, p.ry || 0, p.rz || 0); st.norm.scale.setScalar(base); st.norm.position.set(0, 0, 0); st.base = base;
-  const objK = 1 / st.R, hide = !!(st.orb && st.orb.O.hideMain);
+  const objK = 1 / st.R, hide = !!(st.orbs && st.orbs.some(o => o.O.hideMain));
   st.objs.forEach(obj => { if (obj.userData.orb) return; const pt = obj.userData.part; obj.visible = !hide;
     if (obj.isPoints) { tm.m.makeTranslation(-st.center.x * objK, -st.center.y * objK, -st.center.z * objK); tm.l.makeScale(objK, objK, objK); obj.matrix.multiplyMatrices(tm.l, tm.m); obj.matrixWorldNeedsUpdate = true; obj.material.size = 0.028 * (1 + M.pulse * 1.2) * (st.n > 1 ? 0.7 : 1); return; }
     // Teil-Matrix = Mitte verschieben × feste Lage × Eigenbewegung; je Kopie davor die Anordnung
@@ -10859,7 +11198,7 @@ function d3Apply(st, p, t, au, local, o = {}) {
     for (let i = 0; i < st.n; i++) { const a = d3Arrange(st, p, M, au, i); tm.e.set(a.rx, a.ry, a.rz); tm.q.setFromEuler(tm.e); tm.v.set(a.x, a.y, a.z); tm.s.set(a.s * objK, a.s * a.sy * objK, a.s * objK);
       tm.m.compose(tm.v, tm.q, tm.s).multiply(tm.l); obj.setMatrixAt(i, tm.m); }
     obj.instanceMatrix.needsUpdate = true; });
-  if (st.orb) d3OrbApply(st, M, base * cR0);
+  if (st.orbs && st.orbs.length) st.orbs.forEach(ob => d3OrbApply(st, M, base * cR0, ob, au));
   U.uDef.value = M.def; U.uDefT.value = M.dt; if (p.obj !== 'terrain') U.uDefMode.value = { noise: 0, spike: 1, wave: 2, twist: 3, bend: 5, taper: 6, pulse: 7 }[(p.mo || {}).dtype || 'noise'] || 0;
   U.uRip.value = M.rip; U.uSpread.value = st.isPoints ? M.spread * 0.9 : 0; U.uHue.value = M.hue; U.uEmit.value = M.emit; U.uIriT.value = M.t * 0.05;
   // Oberfläche & Verlauf (Uniforms – kein Neuaufbau nötig)
@@ -10870,32 +11209,61 @@ function d3Apply(st, p, t, au, local, o = {}) {
   st.mats.forEach(m => { if (m.roughness !== undefined) m.roughness = p.rough != null ? +p.rough : m.userData.d3r; if (m.metalness !== undefined) m.metalness = p.metal != null ? +p.metal : m.userData.d3m; });
   // Kamera: Brennweite, Kreisfahrt, Stoß, Intro-Zoom
   const fov = clamp(+p.fov || 30, 12, 75), fk = Math.tan(15 * D) / Math.tan(fov / 2 * D), zoom = (p.zoom || 1) * (o.zoomK || 1), dist = 7 * fk / zoom * M.camK / (1 + M.cam * 0.3);
-  st.cam.fov = fov; st.cam.position.set(Math.sin(M.orbit) * dist, 0, Math.cos(M.orbit) * dist); st.cam.lookAt(0, 0, 0); st.cam.aspect = o.aspect || 1; st.cam.updateProjectionMatrix(); st.camDist = dist;
+  // Claud.io: Kamerafahrt-Vorlagen – rein zeitbasiert (gleiche Zeit = gleiche Pose)
+  let yaw = M.orbit, el = 0, dK = 1, lx = 0, ly = 0; const cm = o.rest ? 'none' : (p.camMove || 'none'), ca = clamp(+p.camMoveAmt || 0, 0, 1), ct = M.t;
+  if (cm === 'dolly') dK = 1 - ca * 0.35 * (0.5 - 0.5 * Math.cos(ct * 0.45));
+  else if (cm === 'push') dK = 1 - ca * 0.45 * (1 - Math.exp(-ct / 6));
+  else if (cm === 'crane') { el = ca * 0.55 * Math.sin(ct * 0.32); dK = 1 - ca * 0.1 * Math.sin(ct * 0.32); }
+  else if (cm === 'circle') yaw += ct * ca * 0.7;
+  else if (cm === 'sweep') { yaw += Math.sin(ct * 0.35) * ca * 0.9; el = Math.sin(ct * 0.23 + 1) * ca * 0.2; }
+  else if (cm === 'handheld') { lx = (Math.sin(ct * 1.7) * 0.6 + Math.sin(ct * 3.9 + 1) * 0.4) * ca * 0.06; ly = (Math.sin(ct * 1.3 + 2) * 0.6 + Math.sin(ct * 4.3) * 0.4) * ca * 0.05; yaw += Math.sin(ct * 0.9) * ca * 0.03; }
+  const cd = dist * dK; st.cam.fov = fov; st.cam.position.set(Math.sin(yaw) * Math.cos(el) * cd, Math.sin(el) * cd, Math.cos(yaw) * Math.cos(el) * cd); st.cam.lookAt(lx, ly, 0); st.cam.aspect = o.aspect || 1; st.cam.updateProjectionMatrix(); st.camDist = dist;
   // Licht: Grundstimmung, Richtung, Helligkeit, Blitz; im Club wandert die Farbe
   const L = st.L, fl = 1 + M.flash * 1.8, la = (+p.lightAng || 0) * D; st.key.color.set(L[0]); st.rim.color.set(L[2]);
   st.key.position.set(-1.2 * Math.cos(la) + 2.2 * Math.sin(la), 7, 2.2 * Math.cos(la) + 1.2 * Math.sin(la)); st.rim.position.set(4 * Math.cos(la) - 3 * Math.sin(la), 2, -3 * Math.cos(la) - 4 * Math.sin(la));
   if (st.light === 'club' && !o.rest) { st.key.color.setHSL((M.t * 0.06) % 1, 0.85, 0.6); st.rim.color.setHSL((M.t * 0.06 + 0.45) % 1, 0.85, 0.55); }
   st.key.intensity = L[1] * fl; st.rim.intensity = L[3] * fl; st.amb.intensity = L[4] * (1 + M.flash * 2.5); st.r.toneMappingExposure = 1.05 * clamp(+p.expo || 1, 0.2, 3);
-  const ok = st.orb ? JSON.stringify([st.orb.O.r, st.orb.O.size, st.orb.O.incl, st.orb.O.tilt, st.orb.O.depthK, st.orb.O.mode, st.orb.O.bob]) : '';
+  const ok = st.orbs && st.orbs.length ? JSON.stringify(st.orbs.map(({ O }) => [O.r, O.size, O.incl, O.tilt, O.depthK, O.mode, O.bob, O.pathAmt, O.hideMain])) : '';
   const pk = [p.rx, p.ry, p.rz, st.n, p.spread, st.arr, ok].join('|'); if (st.poseKey !== pk) { st.poseKey = pk; d3Ground(st, base * cR0); }
   st.ground.position.y = st.groundY; st.ground.visible = !!p.shadow && st.shadowOK !== false && !st.isPoints && p.obj !== 'terrain' && !p.wrap; st.key.castShadow = st.ground.visible;
   return M;
 }
 /* Umlauf für Zeit T: Bahn neigen, Begleiter setzen (Gruppen-Einheiten = Radius der Hauptgruppe) */
-function d3OrbApply(st, M, unit) {
-  const { O, n, sat, line, sw } = st.orb, tm = st.tmp, D = Math.PI / 180, T = M.t, g = st.orbG;
+function d3OrbApply(st, M, unit, ob, au) {
+  ob = ob || st.orb; if (!ob) return;
+  const { O, n, sat, line, sw } = ob, tm = st.tmp, D = Math.PI / 180, T = M.t, g = ob.g || st.orbG;
+  // Audio je Umlauf (deterministisch: nur der Wert zur Zeit t)
+  const av = O.auSrc && O.auSrc !== 'none' && au ? d3Src(au, O.auSrc) * (+O.auAmt || 0) : 0;
   g.position.set(0, M.y, 0); g.rotation.set((+O.incl || 0) * D, 0, (+O.tilt || 0) * D); g.scale.setScalar(unit); g.updateMatrix();
-  const R = (+O.r || 1.3) * (1 + M.spread * 0.5), dk = +O.depthK || 0.6, sz = (+O.size || 0.15) * Math.max(0.05, 1 + M.pulse * 0.6), w = (+O.speed || 0) * D * T + M.jolt * 0.6, ph = (+O.phase || 0) * D;
-  const gq = tm.q2.setFromEuler(g.rotation).invert(), ring = new THREE.Quaternion(), ry = new THREE.Quaternion(), Y = new THREE.Vector3(0, 1, 0);
+  const R = (+O.r || 1.3) * (1 + M.spread * 0.5) * (O.auTgt === 'radius' ? 1 + av * 0.5 : 1), dk = +O.depthK || 0.6,
+    sz = (+O.size || 0.15) * Math.max(0.05, 1 + M.pulse * 0.6) * (O.auTgt === 'size' ? 1 + av : 1),
+    w = (+O.speed || 0) * D * T + M.jolt * 0.6 + (O.auTgt === 'spin' ? av * 1.2 : 0), ph = (+O.phase || 0) * D,
+    bob = (+O.bob || 0) + (O.auTgt === 'bob' ? av : 0), K = Math.max(1, Math.round(+O.pathK || 2)), A = clamp(+O.pathAmt || 0, 0, 1), inst = O.inst || {};
+  const gq = tm.q2.setFromEuler(g.rotation).invert(), ring = new THREE.Quaternion(), ry = new THREE.Quaternion(), Y = new THREE.Vector3(0, 1, 0), nxt = new THREE.Vector3();
+  // Bahnpunkt für Winkel a (Bahn-Einheiten), je nach Bahnform
+  const path = (a, i, rr, out) => {
+    switch (O.mode) {
+      case 'spiral': { const k = 0.5 + 0.5 * Math.sin(a * K * 0.5 + i * 0.9); return out.set(Math.sin(a) * rr * (1 - A * 0.55 + A * 0.55 * 2 * k), (k - 0.5) * A * rr * 0.5, Math.cos(a) * rr * dk * (1 - A * 0.55 + A * 0.55 * 2 * k)); }
+      case 'helix': return out.set(Math.sin(a) * rr, Math.sin(a * K) * rr * 0.9 * A, Math.cos(a) * rr * dk);
+      case 'eight': return out.set(Math.sin(a) * rr, Math.sin(a * 2) * rr * 0.25 * A, Math.sin(a * 2) * rr * 0.5 * dk);
+      case 'lissa': return out.set(Math.sin(a * K + i * 0.3) * rr, Math.sin(a * (K + 1) + 1.57) * rr * 0.7 * A, Math.cos(a * Math.max(1, K - 1)) * rr * dk);
+      case 'wander': { const q = a * 0.35 + i * 7.31, nz = (u, s) => Math.sin(u * 1.13 + s) * 0.6 + Math.sin(u * 2.37 + s * 1.7) * 0.3 + Math.sin(u * 4.91 + s * 2.3) * 0.1;
+        return out.set(Math.sin(a) * rr * (1 + nz(q, 1) * A * 0.4), nz(q, 4) * rr * A * 0.6, Math.cos(a) * rr * dk * (1 + nz(q, 9) * A * 0.4)); }
+    }
+    return out.set(Math.sin(a) * rr, 0, Math.cos(a) * rr * (O.mode === 'ring' ? dk : 1));
+  };
   for (let i = 0; i < n; i++) {
-    let a = w + i / n * Math.PI * 2 + ph, rr = R; ring.identity();
-    if (O.mode === 'atom') { ring.setFromEuler(tm.e.set(0, 0, i / n * Math.PI)); a = w * (1 + (i % 3) * 0.17) + i * 2.4 + ph; }
-    else if (O.mode === 'swarm') { const s = sw[i]; ring.setFromEuler(tm.e.set(s.ix, 0, s.iz)); a = w * s.k + s.ph + ph; rr = R * s.rr; }
-    tm.v.set(Math.sin(a) * rr, Math.sin(a * 2 + i) * (+O.bob || 0) * 0.3, Math.cos(a) * rr * (O.mode === 'ring' ? dk : 1)).applyQuaternion(ring);
-    if (O.face === 'out') tm.q.copy(ring).multiply(ry.setFromAxisAngle(Y, a));
+    const ci = inst[i] || null;
+    if (ci && ci.hide) { tm.s.setScalar(0); tm.m.compose(tm.v.set(0, 0, 0), tm.q.identity(), tm.s); sat.setMatrixAt(i, tm.m); continue; }
+    let a = w * (ci && ci.sp != null ? +ci.sp : 1) + i / n * Math.PI * 2 + ph + (ci && ci.ph ? +ci.ph * D : 0), rr = R * (ci && ci.r != null ? +ci.r : 1); ring.identity();
+    if (O.mode === 'atom') { ring.setFromEuler(tm.e.set(0, 0, i / n * Math.PI)); a = w * (1 + (i % 3) * 0.17) + i * 2.4 + ph + (ci && ci.ph ? +ci.ph * D : 0); }
+    else if (O.mode === 'swarm') { const s = sw[i]; ring.setFromEuler(tm.e.set(s.ix, 0, s.iz)); a = w * s.k + s.ph + ph + (ci && ci.ph ? +ci.ph * D : 0); rr *= s.rr; }
+    path(a, i, rr, tm.v); tm.v.y += Math.sin(a * 2 + i) * bob * 0.3 + (ci && ci.y ? +ci.y : 0); tm.v.applyQuaternion(ring);
+    if (O.face === 'out') { if (O.mode === 'ring' || O.mode === 'atom' || O.mode === 'swarm') tm.q.copy(ring).multiply(ry.setFromAxisAngle(Y, a));
+      else { path(a + 0.01, i, rr, nxt).applyQuaternion(ring).sub(tm.v); tm.q.setFromAxisAngle(Y, Math.atan2(nxt.x, nxt.z) - Math.PI / 2); } } // entlang der Bahn
     else if (O.face === 'cam') tm.q.copy(gq);
     else tm.q.setFromEuler(tm.e.set(i * 1.3 + T * 0.3, T * (+O.self || 0) * D + i, 0.3));
-    tm.s.setScalar(sz); tm.m.compose(tm.v, tm.q, tm.s); sat.setMatrixAt(i, tm.m);
+    tm.s.setScalar(sz * (ci && ci.s != null ? +ci.s : 1)); tm.m.compose(tm.v, tm.q, tm.s); sat.setMatrixAt(i, tm.m);
   }
   sat.instanceMatrix.needsUpdate = true;
   if (line) { const k = line.count; for (let i = 0; i < k; i++) { ring.setFromEuler(tm.e.set(0, 0, O.mode === 'atom' ? i / n * Math.PI : 0)); tm.v.set(0, 0, 0); tm.s.set(R, 1, R * (O.mode === 'ring' ? dk : 1)); tm.m.compose(tm.v, ring, tm.s); line.setMatrixAt(i, tm.m); } line.instanceMatrix.needsUpdate = true; }
@@ -10906,7 +11274,7 @@ function d3Ground(st, unit) {
   const gb = new THREE.Box3(), ib = new THREE.Box3(), im = new THREE.Matrix4();
   st.objs.forEach(ob => { if (ob.userData.orb) return; if (!ob.geometry.boundingBox) ob.geometry.computeBoundingBox(); if (ob.isPoints) { ib.copy(ob.geometry.boundingBox).applyMatrix4(ob.matrixWorld); gb.union(ib); return; }
     for (let k = 0; k < ob.count; k++) { ob.getMatrixAt(k, im); ib.copy(ob.geometry.boundingBox).applyMatrix4(im).applyMatrix4(ob.matrixWorld); gb.union(ib); } });
-  let y = isFinite(gb.min.y) ? gb.min.y : -1.5; if (st.orb) { const low = -d3OrbLow(st.orb.O) * (unit || 1); y = st.orb.O.hideMain ? low : Math.min(y, low); }
+  let y = isFinite(gb.min.y) ? gb.min.y : -1.5; if (st.orbs && st.orbs.length) { const low = -Math.max(...st.orbs.map(o => d3OrbLow(o.O))) * (unit || 1); y = st.orbs.some(o => o.O.hideMain) ? low : Math.min(y, low); }
   st.groundY = y - 0.02;
   o.rotation.copy(keep[0]); o.position.copy(keep[1]); o.scale.copy(keep[2]); o.updateMatrixWorld(true);
 }
@@ -11421,6 +11789,7 @@ function d3ModalHtml() {
     <div class="modal-actions" id="d3Actions"></div><input type="file" accept=".ttf,.otf,.woff,font/ttf,font/otf,font/woff" id="d3FontFile" hidden><input type="file" accept="image/*" id="d3ImgFile" hidden></div></div>`;
 }
 async function d3Open(obj, editEl, opt = {}) {
+  D3.orbI = 0; D3.orbSel = null;
   let m = $('#d3Modal');
   if (!m) { document.body.insertAdjacentHTML('beforeend', d3ModalHtml()); m = $('#d3Modal'); m.addEventListener('click', d3Click); m.addEventListener('input', d3Input); m.addEventListener('change', d3Input); d3BindView($('#d3Canvas')); }
   const clip = opt.clip || null;
@@ -11493,7 +11862,7 @@ function d3DiagUpdate() {
 function d3ToggleDiag() { D3.diag = !D3.diag; const b = document.querySelector('[data-d3="diag"]'); if (b) b.classList.toggle('on', D3.diag); d3DiagUpdate(); }
 function d3SetQuality(v) { D3.q = v; try { localStorage.setItem('studio_d3q', v); } catch (e) {} D3._ac = null; D3._ema = 16; if (D3.st) D3.st._q = null; d3Render(); d3Kick(); }
 /* Geometrie-Cache: Teile eines Objekts nur neu berechnen, wenn sich etwas ändert, das sie wirklich betrifft (nicht bei Orbit, Anordnung, Glättung, Drehung …) */
-const D3_SIG_SKIP = new Set(['rx', 'ry', 'rz', 'mo', 'orb', 'wrap', 'wrapK', 'zoom', 'fov', 'smooth']);
+const D3_SIG_SKIP = new Set(['rx', 'ry', 'rz', 'mo', 'orb', 'orbs', 'camMove', 'camMoveAmt', 'wrap', 'wrapK', 'zoom', 'fov', 'smooth']);
 /* Objekte, deren Geometrie nachweislich nicht von Farbe/Material/Licht/Struktur abhängt (gemessen über je 5 extreme Varianten; Text: im Code geprüft, liest keinen dieser Werte).
    Nicht dabei: Objekte mit Zusatzmaterialien (Disco, Vinyl, Lautsprecher, Mikrofon, Kopfhörer, Kassette, Planet, Partikel, Sonnenscheibe), Karte (Textur) und Wellenfeld (Drahtgitter ändert die Gitterdichte). */
 const D3_MAT_INDEP = new Set(['text', 'sphere', 'cube', 'cylinder', 'cone', 'capsule', 'torus', 'tube', 'ring', 'prism', 'pyramid', 'tetra', 'geo', 'supershape', 'blob', 'crystal', 'diamond', 'spikeball', 'drop', 'star', 'heart', 'moon', 'bolt', 'arrow', 'cross', 'flower', 'gear', 'puff', 'crown', 'note', 'knot', 'helix', 'spring', 'mobius', 'infinity', 'gyro']);
@@ -11551,13 +11920,13 @@ function d3FontSelect(p) {
     <div class="d3-fontprev" id="d3FontPrev"></div><button class="mini" data-d3="fontfile" title="TTF, OTF oder WOFF von deinem Rechner – wird mit dem Objekt gespeichert">Eigene Schrift laden …</button>`;
 }
 function d3RenderOpts() {
-  const p = D3.p, mo = p.mo, O = p.orb, cap = D3_CAP[p.obj] || {}, box = $('#d3Opts'); if (!box) return;
+  const p = D3.p, mo = p.mo, O = d3CurOrb(), cap = D3_CAP[p.obj] || {}, box = $('#d3Opts'); if (!box) return;
   const seg = (k, cur, list, wrap = true) => `<div class="seg ${wrap ? 'wrap' : ''}" data-d3seg="${k}">${list.map(([v, l]) => `<button data-v="${v}" class="${cur === v ? 'on' : ''}">${l}</button>`).join('')}</div>`;
   const rg = (l, k, mn, mx, st, v, attr = 'data-d3k') => `<div class="ctrl"><label>${l}</label><input type="range" ${attr}="${k}" min="${mn}" max="${mx}" step="${st}" value="${v != null ? v : p[k]}"></div>`;
   const mr = (l, k, mn, mx, st) => rg(l, k, mn, mx, st, mo[k], 'data-d3m'), orr = (l, k, mn, mx, st) => rg(l, k, mn, mx, st, O[k], 'data-d3o');
   const opt = (list, v) => list.map(([k, l]) => `<option value="${k}" ${k === v ? 'selected' : ''}>${l}</option>`).join('');
   const pair = (k, l) => `<div class="ctrl shp-pair"><label>${l}</label><select data-d3m="${k}Src">${opt(D3_SRC, mo[k + 'Src'] || 'none')}</select><input type="range" data-d3m="${k}Amt" min="0" max="1" step="0.01" value="${mo[k + 'Amt'] != null ? mo[k + 'Amt'] : 0.5}"></div>`;
-  const tabs = $('#d3Modal [data-d3seg="tab"]'); if (tabs) tabs.innerHTML = [['obj', 'Objekt'], ['shape', 'Form'], ['look', 'Material & Licht'], ['orbit', 'Umlauf' + (O.on ? ' ●' : '')], ['move', 'Bewegung'], ['audio', 'Audio']].map(([v, l]) => `<button data-v="${v}" class="${D3.tab === v ? 'on' : ''}">${l}</button>`).join('');
+  const tabs = $('#d3Modal [data-d3seg="tab"]'); if (tabs) tabs.innerHTML = [['obj', 'Objekt'], ['shape', 'Form'], ['look', 'Material & Licht'], ['orbit', 'Umlauf' + (d3OrbList(p).length ? ' ●' : '')], ['move', 'Bewegung'], ['audio', 'Audio']].map(([v, l]) => `<button data-v="${v}" class="${D3.tab === v ? 'on' : ''}">${l}</button>`).join('');
   let h = '';
   if (D3.tab === 'obj') {
     h += D3_GROUPS.map(([g, list]) => `<label class="lbl d3-glbl">${g}</label><div class="d3-objgrid">${list.map(([k, l]) => `<button class="d3-obj ${p.obj === k ? 'on' : ''}" data-d3obj="${k}" title="${l}"><b>${D3_ICON[k]}</b><span>${l}</span></button>`).join('')}</div>`).join('');
@@ -11597,19 +11966,34 @@ function d3RenderOpts() {
       ${rg('Leuchten', 'glow', 0, 1.5, 0.01)}${rg('Drehung', 'rz', -3.14, 3.14, 0.01)}${rg('Zoom', 'zoom', 0.4, 3, 0.01)}${rg('Brennweite (°)', 'fov', 12, 75, 1)}
       <p class="hint-txt">Kleine Brennweite = Tele (flach, wie Produktfoto), große = Weitwinkel (dramatisch). „Club“ lässt die Lichtfarbe im Video langsam wandern. Neon und Drahtgitter leuchten von selbst.</p>`;
   } else if (D3.tab === 'orbit') {
-    const tgt = d3WrapTargetEl(), orbOpts = D3_OBJ.filter(([k]) => !D3_ORB_NO.has(k));
-    h += `<label class="check-row d3-big"><input type="checkbox" data-d3o="on" ${O.on ? 'checked' : ''}> Begleit-Objekte kreisen um das Hauptobjekt</label>`;
+    const tgt = d3WrapTargetEl(), orbOpts = D3_OBJ.filter(([k]) => !D3_ORB_NO.has(k)), all = [p.orb, ...(p.orbs || [])], oi = D3.orbI || 0;
+    h += `<div class="orb-tabs" role="tablist">${all.map((x, i) => `<button class="orb-tab ${i === oi ? 'on' : ''} ${x.on ? 'live' : ''}" data-d3orbi="${i}" role="tab" aria-selected="${i === oi}" title="${x.on ? 'Aktiv' : 'Ausgeschaltet'}">Umlauf ${i + 1}</button>`).join('')}
+      ${all.length < D3_ORB_MAX ? '<button class="orb-tab add" data-d3orbadd title="Weiteren Umlauf hinzufügen – jeder hat eigene Bahn, Objekte, Material und Tempo">＋</button>' : ''}
+      <span class="orb-tab-sp"></span>${all.length > 1 || oi > 0 ? '<button class="mini" data-d3orbdup title="Diesen Umlauf duplizieren">Duplizieren</button><button class="mini danger" data-d3orbdel title="Diesen Umlauf entfernen">✕</button>' : `<button class="mini" data-d3orbdup title="Diesen Umlauf duplizieren" ${O.on ? '' : 'disabled'}>Duplizieren</button>`}</div>`;
+    h += `<label class="check-row d3-big"><input type="checkbox" data-d3o="on" ${O.on ? 'checked' : ''}> ${oi ? `Umlauf ${oi + 1} anzeigen` : 'Begleit-Objekte kreisen um das Hauptobjekt'}</label>`;
     if (O.on) {
+      const isPath = D3_ORB_PATHS.has(O.mode), n = clamp(Math.round(O.count || 3), 1, 48), ci = D3.orbSel != null && D3.orbSel < n ? D3.orbSel : -1, inst = (O.inst && ci >= 0 && O.inst[ci]) || {};
+      const ir = (l, k, mn, mx, st, def) => `<div class="ctrl"><label>${l}</label><input type="range" data-d3oi="${k}" min="${mn}" max="${mx}" step="${st}" value="${inst[k] != null ? inst[k] : def}"><span class="val">${(+(inst[k] != null ? inst[k] : def)).toFixed(st < 1 ? 2 : 0)}</span></div>`;
       h += `<div class="preset-chips">${D3_ORB_PRESETS.map(([n], i) => `<button class="chip" data-d3opre="${i}">${n}</button>`).join('')}</div>
         <div class="ctrl"><label>Objekt</label><select data-d3o="obj" style="flex:1">${opt(orbOpts, O.obj)}</select></div>
         ${O.obj === 'text' ? `<div class="ctrl"><label>Text</label><input type="text" data-d3o="text" value="${esc(O.text || '')}" maxlength="24" style="flex:1"></div>` : ''}
-        <label class="lbl">Bahn</label>${seg('o:mode', O.mode, D3_ORB_MODES, false)}
-        ${orr('Anzahl', 'count', 1, 48, 1)}${orr('Radius', 'r', 0.5, 3, 0.01)}${O.mode === 'ring' ? orr('Bahn-Tiefe', 'depthK', 0.1, 1.6, 0.01) : ''}${orr('Neigung (°)', 'incl', -90, 90, 1)}${orr('Schräglage (°)', 'tilt', -90, 90, 1)}
+        <label class="lbl">Bahn</label>${seg('o:mode', O.mode, D3_ORB_MODES)}
+        ${orr('Anzahl', 'count', 1, 48, 1)}${orr('Radius', 'r', 0.5, 3, 0.01)}${O.mode !== 'atom' && O.mode !== 'swarm' ? orr('Bahn-Tiefe (Ellipse)', 'depthK', 0.1, 1.6, 0.01) : ''}${orr('Neigung (°)', 'incl', -90, 90, 1)}${orr('Schräglage (°)', 'tilt', -90, 90, 1)}
+        ${isPath ? orr('Komplexität', 'pathK', 1, 6, 1) + orr('Bahn-Verformung', 'pathAmt', 0, 1, 0.01) : ''}
         ${orr('Tempo (°/s)', 'speed', -240, 240, 1)}${orr('Größe', 'size', 0.02, 0.6, 0.005)}${orr('Startwinkel (°)', 'phase', 0, 360, 1)}${orr('Auf & Ab', 'bob', 0, 1, 0.01)}
         <label class="lbl">Ausrichtung</label>${seg('o:face', O.face, D3_ORB_FACE, false)}${O.face === 'spin' ? orr('Eigendrehung (°/s)', 'self', -360, 360, 1) : ''}
         <div class="ctrl"><label>Material</label><select data-d3o="mat" style="flex:1"><option value="same" ${O.mat === 'same' ? 'selected' : ''}>Wie Hauptobjekt</option>${opt(D3_MAT, O.mat)}</select>${O.mat !== 'same' ? `<input type="color" data-d3o="color" value="${O.color}">` : ''}</div>
-        <label class="check-row"><input type="checkbox" data-d3o="line" ${O.line ? 'checked' : ''} ${O.mode === 'swarm' ? 'disabled' : ''}> Bahn als Linie zeigen</label>${O.line && O.mode !== 'swarm' ? orr('Linienstärke', 'lineW', 0, 1, 0.01) : ''}
+        <label class="check-row"><input type="checkbox" data-d3o="line" ${O.line ? 'checked' : ''} ${O.mode === 'ring' || O.mode === 'atom' ? '' : 'disabled'}> Bahn als Linie zeigen${O.mode === 'ring' || O.mode === 'atom' ? '' : ' (nur Kreis und Atom)'}</label>${O.line && (O.mode === 'ring' || O.mode === 'atom') ? orr('Linienstärke', 'lineW', 0, 1, 0.01) : ''}
         <label class="check-row"><input type="checkbox" data-d3o="hideMain" ${O.hideMain ? 'checked' : ''}> Hauptobjekt ausblenden (nur die Begleiter)</label>
+        <label class="lbl">Audio für diesen Umlauf</label>
+        <div class="ctrl"><label>Quelle</label><select data-d3o="auSrc" style="flex:1">${opt(D3_SRC, O.auSrc || 'none')}</select></div>
+        ${O.auSrc && O.auSrc !== 'none' ? seg('o:auTgt', O.auTgt || 'radius', D3_ORB_AUTGT, false) + orr('Stärke', 'auAmt', -1, 1.5, 0.01) : ''}
+        <details class="orb-inst" ${ci >= 0 ? 'open' : ''}><summary>Einzelne Begleiter bearbeiten${O.inst && Object.keys(O.inst).length ? ` <em>${Object.keys(O.inst).length} angepasst</em>` : ''}</summary>
+          <div class="orb-inst-pick">${[...Array(n)].map((_, i) => `<button class="${i === ci ? 'on' : ''} ${O.inst && O.inst[i] ? 'mod' : ''}" data-d3osel="${i}" title="Begleiter ${i + 1}">${i + 1}</button>`).join('')}</div>
+          ${ci >= 0 ? `${ir('Größe (×)', 's', 0, 3, 0.01, 1)}${ir('Abstand (×)', 'r', 0.2, 2.5, 0.01, 1)}${ir('Versatz (°)', 'ph', -180, 180, 1, 0)}${ir('Tempo (×)', 'sp', -3, 3, 0.05, 1)}${ir('Höhe', 'y', -1, 1, 0.01, 0)}
+            <label class="check-row"><input type="checkbox" data-d3oi="hide" ${inst.hide ? 'checked' : ''}> Diesen Begleiter ausblenden</label>
+            <div class="mini-btns"><button class="mini" data-d3oireset>Begleiter ${ci + 1} zurücksetzen</button><button class="mini" data-d3oiall ${O.inst ? '' : 'disabled'}>Alle zurücksetzen</button></div>` : '<p class="hint-txt">Wähle eine Nummer, um Größe, Abstand, Versatz und Tempo nur für diesen Begleiter zu ändern.</p>'}
+        </details>
         <p class="hint-txt">Die Begleiter haben echte Tiefe: Auf der vorderen Bahnhälfte laufen sie vor dem Hauptobjekt, hinten verschwinden sie dahinter – auch nur teilweise. „Neigung“ kippt die Bahn zu dir, „Bahn-Tiefe“ bestimmt, wie weit sie vor und hinter das Objekt reicht.</p>`;
     }
     h += `<label class="lbl" style="margin-top:8px">Vorne & hinten</label>
@@ -11626,6 +12010,7 @@ function d3RenderOpts() {
       ${mr('Tempo (×)', 'speed', 0, 3, 0.01)}${mr('Drehen (°/s)', 'spin', -180, 180, 1)}${mr('Kippen (°/s)', 'tilt', -90, 90, 1)}${mr('Schweben', 'float', 0, 1, 0.01)}${mr('Wackeln', 'wobble', 0, 1, 0.01)}${mr('Hüpfen', 'bounce', 0, 1, 0.01)}${mr('Kamerafahrt (°/s)', 'orbit', -90, 90, 1)}
       <label class="lbl">Verformung</label>${seg('dtype', mo.dtype || 'noise', D3_DEFORM)}${mr('Stärke', 'deform', 0, 1, 0.01)}
       <div class="ctrl"><label>Intro</label><select data-d3m="intro" style="flex:1">${opt(D3_INTRO, mo.intro || 'none')}</select></div>${mo.intro && mo.intro !== 'none' ? mr('Intro-Dauer (s)', 'introD', 0.2, 4, 0.1) : ''}
+      <label class="lbl">Kamera</label>${seg('camMove', p.camMove || 'none', D3_CAM_MOVES)}${p.camMove && p.camMove !== 'none' ? rg('Stärke', 'camMoveAmt', 0, 1, 0.01) : ''}
       <p class="hint-txt">Bewegung läuft im Video ab Clipbeginn, das Intro beim Erscheinen. Im Design landet immer die Ruhepose.${O.on ? ' Der Umlauf hat sein eigenes Tempo (Tab „Umlauf“).' : ''}</p>`;
   } else {
     h += `<div class="preset-chips">${D3_AU_PRESETS.map(([n], i) => `<button class="chip" data-d3apre="${i}">${n}</button>`).join('')}</div>
@@ -11651,8 +12036,10 @@ function d3Input(e) {
   if (t.id === 'd3FontFile' && e.type === 'change') { const f = t.files && t.files[0]; t.value = ''; d3FontFile(f); return; }
   if (t.dataset.d3 === 'demo') { D3.demo = t.value; d3Render(); return; }
   if (km) { D3.p.mo[km] = t.tagName === 'SELECT' ? t.value : +t.value; if (km === 'intro') { D3.t0 = performance.now(); d3RenderOpts(); } d3Render(); return; }
-  if (ko) { const O = D3.p.orb; O[ko] = t.type === 'checkbox' ? t.checked : t.type === 'range' ? +t.value : t.value;
-    if (D3_ORB_REBUILD.has(ko)) { d3Later(ko === 'text' ? 250 : ko === 'count' || ko === 'lineW' ? 120 : 60); if (t.type === 'checkbox' || t.tagName === 'SELECT') d3RenderOpts(); } else d3Render(); return; }
+  const koi = t.dataset.d3oi; if (koi) { const O = d3CurOrb(), i = D3.orbSel; if (i == null || i < 0) return; O.inst = { ...(O.inst || {}) }; const cur = { ...(O.inst[i] || {}) };
+    cur[koi] = t.type === 'checkbox' ? t.checked : +t.value; O.inst[i] = cur; const vs = t.parentElement.querySelector('.val'); if (vs) vs.textContent = (+t.value).toFixed(+t.step < 1 ? 2 : 0); if (t.type === 'checkbox') d3RenderOpts(); d3Render(); return; }
+  if (ko) { const O = d3CurOrb(); O[ko] = t.type === 'checkbox' ? t.checked : t.type === 'range' ? +t.value : t.value;
+    if (D3_ORB_REBUILD.has(ko)) { d3Later(ko === 'text' ? 250 : ko === 'count' || ko === 'lineW' ? 120 : 60); if (t.type === 'checkbox' || t.tagName === 'SELECT') d3RenderOpts(); } else { if (t.tagName === 'SELECT') d3RenderOpts(); d3Render(); } return; }
   if (!k) return; if (e.type === 'change' && t.type === 'range') return; // Regler: schon über „input“ übernommen
   D3.p[k] = t.type === 'checkbox' ? t.checked : t.type === 'range' ? +t.value : t.value;
   if (k === 'rough' || k === 'metal') t.classList.remove('auto');
@@ -11682,12 +12069,23 @@ async function d3Click(e) {
   const sg = e.target.closest('[data-d3seg] button'); if (sg) { const k = sg.parentElement.dataset.d3seg, v = sg.dataset.v;
     if (k === 'tab') { D3.tab = v; d3RenderOpts(); if (['shape', 'orbit', 'look'].includes(v)) d3AnrcyTip('d3' + v); return; }
     if (k === 'dtype') { D3.p.mo.dtype = v; d3RenderOpts(); d3Render(); return; }
-    if (k.startsWith('o:')) { const ok = k.slice(2); D3.p.orb[ok] = v; d3RenderOpts(); if (D3_ORB_REBUILD.has(ok)) d3Rebuild(); else d3Render(); return; }
+    if (k.startsWith('o:')) { const ok = k.slice(2); d3CurOrb()[ok] = v; d3RenderOpts(); if (D3_ORB_REBUILD.has(ok)) d3Rebuild(); else d3Render(); return; }
     D3.p[k] = v; if (k === 'mat') D3.p.color = D3_MAT_COL[v]; d3RenderOpts(); if (D3_REBUILD.has(k)) d3Rebuild(); else d3Render(); return; }
   const mp = e.target.closest('[data-d3mpre]'); if (mp) { const keep = {}; D3_AU_KEYS.concat(['intro', 'introD']).forEach(q => keep[q] = D3.p.mo[q]); const base = {}; D3_MO_KEYS.forEach(q => base[q] = D3_MO[q]);
     D3.p.mo = { ...base, ...keep, ...D3_MO_PRESETS[+mp.dataset.d3mpre][1] }; if (!D3.play) { D3.play = true; d3RenderActions(); } D3.t0 = performance.now(); d3RenderOpts(); d3Kick(); return; }
   const ap = e.target.closest('[data-d3apre]'); if (ap) { D3_AU_PAIRS.forEach(([q]) => { D3.p.mo[q + 'Src'] = 'none'; }); Object.assign(D3.p.mo, D3_AU_PRESETS[+ap.dataset.d3apre][1]); if (!D3.play) { D3.play = true; } D3.beat = true; d3RenderActions(); d3RenderOpts(); d3Kick(); return; }
-  const op = e.target.closest('[data-d3opre]'); if (op) { const keep = { on: true, hideMain: D3.p.orb.hideMain, mat: D3.p.orb.mat, color: D3.p.orb.color }; D3.p.orb = { ...D3_ORB, ...D3_ORB_PRESETS[+op.dataset.d3opre][1], ...keep }; if (!D3.play) { D3.play = true; d3RenderActions(); } d3RenderOpts(); d3Rebuild(); return; }
+  const oti = e.target.closest('[data-d3orbi]'); if (oti) { D3.orbI = +oti.dataset.d3orbi; D3.orbSel = null; d3RenderOpts(); return; }
+  if (e.target.closest('[data-d3orbadd]')) { const p = D3.p; p.orbs = p.orbs || []; if (p.orbs.length >= D3_ORB_MAX - 1) return; const k = p.orbs.length + 1;
+    p.orbs.push({ ...D3_ORB, on: true, obj: ['sphere', 'star', 'crystal', 'cube', 'heart'][k % 5], count: 4 + k * 2, r: 1.3 + k * 0.45, size: Math.max(0.05, 0.13 - k * 0.02), incl: 16 + k * 22, tilt: -10 + k * 15, speed: 40 - k * 14, mode: k === 1 ? 'ring' : k === 2 ? 'atom' : 'eight' });
+    D3.orbI = p.orbs.length; D3.orbSel = null; d3RenderOpts(); d3Rebuild(); return; }
+  if (e.target.closest('[data-d3orbdup]')) { const p = D3.p, src = d3CurOrb(); p.orbs = p.orbs || []; if (p.orbs.length >= D3_ORB_MAX - 1) { toast(`Höchstens ${D3_ORB_MAX} Umläufe.`, '', 2000); return; }
+    p.orbs.push({ ...JSON.parse(JSON.stringify(src)), on: true, hideMain: false, phase: ((+src.phase || 0) + 180 / Math.max(1, +src.count || 3)) % 360 }); D3.orbI = p.orbs.length; d3RenderOpts(); d3Rebuild(); return; }
+  if (e.target.closest('[data-d3orbdel]')) { const p = D3.p, i = D3.orbI || 0; if (i > 0) p.orbs.splice(i - 1, 1); else if (p.orbs && p.orbs.length) p.orb = { ...D3_ORB, ...p.orbs.shift() }; else p.orb = { ...p.orb, on: false };
+    D3.orbI = Math.max(0, i - 1); D3.orbSel = null; d3RenderOpts(); d3Rebuild(); return; }
+  const osel = e.target.closest('[data-d3osel]'); if (osel) { const i = +osel.dataset.d3osel; D3.orbSel = D3.orbSel === i ? null : i; d3RenderOpts(); return; }
+  if (e.target.closest('[data-d3oireset]')) { const O = d3CurOrb(); if (O.inst) { delete O.inst[D3.orbSel]; if (!Object.keys(O.inst).length) O.inst = null; } d3RenderOpts(); d3Render(); return; }
+  if (e.target.closest('[data-d3oiall]')) { d3CurOrb().inst = null; d3RenderOpts(); d3Render(); return; }
+  const op = e.target.closest('[data-d3opre]'); if (op) { const cur = d3CurOrb(), keep = { on: true, hideMain: cur.hideMain, mat: cur.mat, color: cur.color }; d3SetCurOrb({ ...D3_ORB, ...D3_ORB_PRESETS[+op.dataset.d3opre][1], ...keep }); if (!D3.play) { D3.play = true; d3RenderActions(); } d3RenderOpts(); d3Rebuild(); return; }
   const a = e.target.closest('[data-d3]'); if (!a || a.tagName === 'INPUT') return; const k = a.dataset.d3;
   if (k === 'close') d3Close(); else if (k === 'commit') d3Commit(); else if (k === 'commitvideo') d3CommitVideo(); else if (k === 'commitclip') d3CommitClip(); else if (k === 'png') d3SavePng(); else if (k === 'dice') d3Dice();
   else if (k === 'reset') { Object.assign(D3.p, { rx: (D3_OBJ_DEF[D3.p.obj] || {}).rx != null ? D3_OBJ_DEF[D3.p.obj].rx : -0.35, ry: (D3_OBJ_DEF[D3.p.obj] || {}).ry != null ? D3_OBJ_DEF[D3.p.obj].ry : 0.6, rz: 0, zoom: 1, fov: 30 }); D3.t0 = performance.now(); d3RenderOpts(); d3Render(); }
@@ -17287,7 +17685,7 @@ async function msAnalyze(a) {
   a._fxBusy = (async () => {
     const buf = await msDecode(a), sr = buf.sampleRate;
     const L = buf.getChannelData(0), R = buf.numberOfChannels > 1 ? buf.getChannelData(1) : L;
-    const frames = Math.ceil(buf.duration * FX_RATE), bands = new Float32Array(frames * FX_BANDS), bass = new Float32Array(frames), high = new Float32Array(frames);
+    const frames = Math.ceil(buf.duration * FX_RATE), bands = new Float32Array(frames * FX_BANDS), bass = new Float32Array(frames), high = new Float32Array(frames), width = new Float32Array(frames);
     const win = new Float32Array(FX_N); for (let i = 0; i < FX_N; i++) win[i] = 0.5 - 0.5 * Math.cos(2 * Math.PI * i / (FX_N - 1));
     // logarithmische Bandgrenzen 30 Hz … 16 kHz
     const edges = []; for (let b = 0; b <= FX_BANDS; b++) edges.push(Math.max(1, Math.round(30 * Math.pow(16000 / 30, b / FX_BANDS) / sr * FX_N)));
@@ -17295,7 +17693,9 @@ async function msAnalyze(a) {
     const re = new Float32Array(FX_N), im = new Float32Array(FX_N);
     for (let f = 0; f < frames; f++) {
       const c0 = Math.round(f / FX_RATE * sr) - FX_N / 2;
-      for (let i = 0; i < FX_N; i++) { const j = c0 + i; re[i] = (j >= 0 && j < L.length) ? (L[j] + R[j]) * 0.5 * win[i] : 0; im[i] = 0; }
+      let m2 = 0, s2 = 0;
+      for (let i = 0; i < FX_N; i++) { const j = c0 + i; if (j >= 0 && j < L.length) { const mm = (L[j] + R[j]) * 0.5, ss = (L[j] - R[j]) * 0.5; re[i] = mm * win[i]; m2 += mm * mm; s2 += ss * ss; } else re[i] = 0; im[i] = 0; }
+      width[f] = m2 + s2 > 1e-9 ? Math.sqrt(s2 / (m2 + s2)) : 0; // Claud.io: Stereobreite 0 (mono) … ~0.7 (breit)
       fftMag(re, im);
       const mag = k => Math.hypot(re[k], im[k]);
       for (let b = 0; b < FX_BANDS; b++) { let m = 0; const e = Math.max(edges[b] + 1, edges[b + 1]); for (let k = edges[b]; k < e && k < FX_N / 2; k++) m = Math.max(m, mag(k)); bands[f * FX_BANDS + b] = m; }
@@ -17311,7 +17711,8 @@ async function msAnalyze(a) {
     // Glättung: schneller Anstieg, langsames Abklingen – wie bei echten Pegelanzeigen
     const smooth = (arr, stride, n, up, down) => { for (let b = 0; b < stride; b++) { let v = 0; for (let f = 0; f < n; f++) { const x = arr[f * stride + b]; v = x > v ? v + (x - v) * up : v + (x - v) * down; arr[f * stride + b] = v; } } };
     smooth(bands, FX_BANDS, frames, 0.61, 0.134); smooth(bass, 1, frames, 0.68, 0.117); smooth(high, 1, frames, 0.68, 0.163); // auf 60/s umgerechnet, gleiches Zeitverhalten
-    a.fx = { frames, bands, bass, high };
+    { let v = 0; for (let f = 0; f < frames; f++) { const x = clamp(width[f] * 1.6, 0, 1); v += (x - v) * (x > v ? 0.25 : 0.06); width[f] = v; } }
+    a.fx = { frames, bands, bass, high, width };
     return a.fx;
   })();
   try { return await a._fxBusy; } finally { a._fxBusy = null; }
@@ -18291,6 +18692,7 @@ function msBuildInspector() {
       <div class="ctrl"><label>Farben</label>${[0, 1, 2].map(i => `<input type="color" data-mgcol="${i}" value="${hex((c.cols || GEN_SHADERS[c.gen || 'tunnel'].c)[i])}">`).join('')}<button class="mini" data-mgrand title="Zufällige Farbkombination">⟳ Mischen</button></div>
       ${rng('Tempo', 'gspeed', c.gspeed != null ? c.gspeed : 1, 0, 3, 0.05, '×')}${rng('Intensität', 'gint', c.gint != null ? c.gint : 1, 0, 2, 0.05, '×')}${rng('Audio-Reaktion', 'react', c.react != null ? c.react : 1, 0, 2.5, 0.05, '×')}
       ${rng('Zoom', 'gzoom', c.gzoom != null ? c.gzoom : 0.5, 0, 1, 0.01)}${rng('Detail', 'gdet', c.gdet != null ? c.gdet : 0.5, 0, 1, 0.01)}${rng('Variante', 'seed', c.seed || 0, 0, 100, 1)}
+      ${rng('Verzerrung', 'gwarp', c.gwarp != null ? c.gwarp : 0, 0, 1.5, 0.01)}${rng('Kontrast', 'gct', c.gct != null ? c.gct : 1, 0.3, 2.5, 0.01, '×')}${rng('Sättigung', 'gsat', c.gsat != null ? c.gsat : 1, 0, 2, 0.01, '×')}
       <div class="ctrl"><label>Material</label><select data-mk="tex" style="flex:1"><option value="none">Ohne – nur Shader</option><option value="below" ${c.tex === 'below' ? 'selected' : ''}>Spuren darunter (Video/Bild)</option>${MS.assets.filter(a => a.kind === 'image').map(a => `<option value="${a.id}" ${c.tex === a.id ? 'selected' : ''}>Bild: ${esc(a.name)}</option>`).join('')}</select></div>
       ${c.tex && c.tex !== 'none' ? rng('Material-Stärke', 'texMix', c.texMix != null ? c.texMix : 0.8, 0, 1, 0.01) : ''}
       <p class="hint-txt">Erzeugt sein Bild selbst und reagiert auf Bass, Mitten, Höhen und die Kick des Tracks. Als Überlagerung: Mischmodus „Negativ multipl." (Screen) oder „Hinzufügen".</p>`);
@@ -18751,7 +19153,7 @@ function msDrawTrack(x, tr, t) {
    Timeline. Gerechnet wird auf der Grafikkarte (WebGL); das Ergebnis wird
    ins Videobild gesetzt. Gleiche Zeit = gleiches Bild → Vorschau = Export. */
 const GEN_HEAD = `precision highp float;
-uniform vec2 R; uniform float T, B, M, H, K, S, I, Z, D, SEED; uniform vec3 C1, C2, C3; uniform sampler2D TX; uniform float TXON, TXM;
+uniform vec2 R; uniform float T, B, M, H, K, S, I, Z, D, SEED; uniform vec3 C1, C2, C3; uniform sampler2D TX; uniform float TXON, TXM; uniform float WP, CT, SAT;
 vec3 tx(vec2 u){ return texture2D(TX, fract(u)).rgb; }
 // Material einmischen: das Bild folgt den Formen und der Helligkeit des Shaders
 vec3 mixT(vec3 c, vec2 u){ if (TXON < 0.5) return c; float l = max(max(c.r, c.g), c.b); return mix(c, tx(u) * (0.25 + 1.1 * l), TXM); }
@@ -18761,8 +19163,12 @@ float noise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f
 float fbm(vec2 p){ float v = 0.0, a = 0.5; for (int i = 0; i < 5; i++) { v += a * noise(p); p = p * 2.03 + 11.7; a *= 0.5; } return v; }
 vec3 pal(float t){ t = fract(t); return t < 0.5 ? mix(C1, C2, smoothstep(0.0, 0.5, t)) : mix(C2, C3, smoothstep(0.5, 1.0, t)); }
 mat2 rot(float a){ float c = cos(a), s = sin(a); return mat2(c, -s, s, c); }
-vec2 uv0(){ return (gl_FragCoord.xy - 0.5 * R) / min(R.x, R.y); }
+vec2 uv0(){ vec2 p = (gl_FragCoord.xy - 0.5 * R) / min(R.x, R.y); if (WP > 0.001) { float t = T * 0.6; p += WP * 0.22 * vec2(sin(p.y * 4.3 + t * 1.3 + 2.0 * sin(p.x * 2.1 - t)), cos(p.x * 3.7 - t * 1.1 + 2.0 * cos(p.y * 1.9 + t))) * (1.0 + 0.6 * K); } return p; }
 `;
+/* Claud.io: gemeinsame Nachbearbeitung für alle Shader – Kontrast und Sättigung (Verzerrung steckt in uv0) */
+const GEN_POST = `
+void main(){ main_(); vec3 c = gl_FragColor.rgb; c = (c - 0.5) * CT + 0.5; float l = dot(c, vec3(0.299, 0.587, 0.114)); c = mix(vec3(l), c, SAT); gl_FragColor = vec4(max(c, 0.0), gl_FragColor.a); }`;
+const genWrapMain = src => src.replace(/void\s+main\s*\(\s*\)\s*\{/, 'void main_(){') + GEN_POST;
 const GEN_SHADERS = {
   tunnel: { name: 'Tunnel', c: ['#ff2e88', '#6c5ce7', '#00e5ff'], src: `void main(){ vec2 p = uv0() * rot(T * 0.05 * S); float a = atan(p.y, p.x), r = length(p);
     float z = 0.35 / max(r, 0.001) + T * S * 0.9 + K * 0.35; float ring = smoothstep(0.35, 0.5, abs(fract(z * (1.0 + D * 2.0)) - 0.5) * 2.0);
@@ -18840,18 +19246,18 @@ const GEN_SHADERS = {
 const GEN = { cv: null, gl: null, buf: null, progs: {}, failed: {}, ok: null };
 function genGL() {
   if (GEN.ok === false) return null; if (GEN.gl) return GEN.gl;
-  try { GEN.cv = document.createElement('canvas'); GEN.gl = GEN.cv.getContext('webgl', { preserveDrawingBuffer: true, antialias: false, premultipliedAlpha: false }) || GEN.cv.getContext('experimental-webgl'); } catch (e) { GEN.gl = null; }
+  try { GEN.cv = document.createElement('canvas'); GEN.gl = GEN.cv.getContext('webgl', { preserveDrawingBuffer: true, antialias: false, premultipliedAlpha: false, powerPreference: 'high-performance' }) || GEN.cv.getContext('experimental-webgl'); } catch (e) { GEN.gl = null; }
   if (!GEN.gl) { GEN.ok = false; return null; }
   const gl = GEN.gl; GEN.buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, GEN.buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW); GEN.ok = true; return gl;
 }
 function genProg(id) {
   if (GEN.progs[id]) return GEN.progs[id]; if (GEN.failed[id]) return null; const gl = genGL(); if (!gl) return null; const def = GEN_SHADERS[id]; if (!def) return null;
   const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { console.warn('Shader', id, gl.getShaderInfoLog(s)); return null; } return s; };
-  const vs = sh(gl.VERTEX_SHADER, 'attribute vec2 a; void main(){ gl_Position = vec4(a, 0.0, 1.0); }'), fs = sh(gl.FRAGMENT_SHADER, GEN_HEAD + def.src);
+  const vs = sh(gl.VERTEX_SHADER, 'attribute vec2 a; void main(){ gl_Position = vec4(a, 0.0, 1.0); }'), fs = sh(gl.FRAGMENT_SHADER, GEN_HEAD + genWrapMain(def.src));
   if (!vs || !fs) { GEN.failed[id] = true; return null; }
   const p = gl.createProgram(); gl.attachShader(p, vs); gl.attachShader(p, fs); gl.bindAttribLocation(p, 0, 'a'); gl.linkProgram(p);
   if (!gl.getProgramParameter(p, gl.LINK_STATUS)) { GEN.failed[id] = true; return null; }
-  const u = {}; ['R', 'T', 'B', 'M', 'H', 'K', 'S', 'I', 'Z', 'D', 'SEED', 'C1', 'C2', 'C3', 'TX', 'TXON', 'TXM'].forEach(n => u[n] = gl.getUniformLocation(p, n));
+  const u = {}; ['R', 'T', 'B', 'M', 'H', 'K', 'S', 'I', 'Z', 'D', 'SEED', 'C1', 'C2', 'C3', 'TX', 'TXON', 'TXM', 'WP', 'CT', 'SAT'].forEach(n => u[n] = gl.getUniformLocation(p, n));
   return (GEN.progs[id] = { p, u });
 }
 /* Audio-Werte zum Zeitpunkt t: Bass, Mitten, Höhen und eine Kick-Hüllkurve aus dem Beat-Raster */
@@ -18872,6 +19278,7 @@ function msDrawGen(x, c, t) {
   const au = msAudioDrive(t), react = c.react != null ? c.react : 1, hx = s => { const r = hexToRgb(s); return [r.r / 255, r.g / 255, r.b / 255]; };
   gl.uniform2f(pr.u.R, w, h); gl.uniform1f(pr.u.T, t + (c.seed || 0) * 0.37); gl.uniform1f(pr.u.B, au.B * react); gl.uniform1f(pr.u.M, au.M * react); gl.uniform1f(pr.u.H, au.H * react); gl.uniform1f(pr.u.K, au.K * react);
   gl.uniform1f(pr.u.S, c.gspeed != null ? c.gspeed : 1); gl.uniform1f(pr.u.I, c.gint != null ? c.gint : 1); gl.uniform1f(pr.u.Z, c.gzoom != null ? c.gzoom : 0.5); gl.uniform1f(pr.u.D, c.gdet != null ? c.gdet : 0.5); gl.uniform1f(pr.u.SEED, (c.seed || 0) * 0.13);
+  gl.uniform1f(pr.u.WP, c.gwarp != null ? +c.gwarp : 0); gl.uniform1f(pr.u.CT, c.gct != null ? +c.gct : 1); gl.uniform1f(pr.u.SAT, c.gsat != null ? +c.gsat : 1);
   gl.uniform3fv(pr.u.C1, hx(cols[0])); gl.uniform3fv(pr.u.C2, hx(cols[1])); gl.uniform3fv(pr.u.C3, hx(cols[2]));
   // Material: Bild aus der Bibliothek oder alles auf den Spuren darunter als Textur
   let src = null; if (c.tex === 'below') src = x.canvas; else if (c.tex && c.tex !== 'none') { const a = msAsset(c.tex); src = a && a.img; }
@@ -18974,15 +19381,44 @@ function msBuildVisual(i) {
    Beim Zeichnen wird pro Bild eine animierte Kopie des Clips berechnet. */
 const KF_PROPS = [['x', 'Position X', 0.5], ['y', 'Position Y', 0.5], ['scale', 'Größe', 1], ['rot', 'Drehung', 0], ['opacity', 'Deckkraft', 1],
   ['lb', 'Helligkeit', 1], ['ls', 'Sättigung', 1], ['lh', 'Farbton', 0], ['lblur', 'Weichzeichner', 0],
-  ['gspeed', 'Tempo', 1], ['gint', 'Intensität', 1], ['gzoom', 'Zoom', 0.5], ['gdet', 'Detail', 0.5], ['texMix', 'Material-Stärke', 0.8]];
-const KF_GEN_ONLY = new Set(['gspeed', 'gint', 'gzoom', 'gdet', 'texMix']);
+  ['gspeed', 'Tempo', 1], ['gint', 'Intensität', 1], ['gzoom', 'Zoom', 0.5], ['gdet', 'Detail', 0.5], ['texMix', 'Material-Stärke', 0.8],
+  ['gwarp', 'Verzerrung', 0], ['gct', 'Kontrast', 1], ['gsat', 'Sättigung', 1]];
+const KF_GEN_ONLY = new Set(['gspeed', 'gint', 'gzoom', 'gdet', 'texMix', 'gwarp', 'gct', 'gsat']);
 const kfDefault = k => (KF_PROPS.find(p => p[0] === k) || [0, 0, 0])[2];
+/* Claud.io: Verläufe – je Keyframe ([t, v, Verlauf]) oder für den ganzen Clip (kfEase) */
+const KF_EASES = [['smooth', 'Weich'], ['linear', 'Linear'], ['in', 'Beschleunigen'], ['out', 'Abbremsen'], ['inout', 'Weich (stark)'], ['back', 'Überschwingen'], ['elastic', 'Elastisch'], ['bounce', 'Aufprall'], ['bezier', 'Bezier (eigene Kurve)'], ['hold', 'Halten']];
+function kfBezier(x1, y1, x2, y2, x) { // kubische Bezier-Kurve wie CSS cubic-bezier()
+  const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx, cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
+  let u = x; for (let i = 0; i < 6; i++) { const fx = ((ax * u + bx) * u + cx) * u - x, d = (3 * ax * u + 2 * bx) * u + cx; if (Math.abs(fx) < 1e-5 || Math.abs(d) < 1e-6) break; u -= fx / d; }
+  u = clamp(u, 0, 1); return ((ay * u + by) * u + cy) * u;
+}
+function kfEaseFn(e, u, c) {
+  switch (e) {
+    case 'hold': return 0; case 'linear': return u; case 'in': return u * u * u; case 'out': return 1 - Math.pow(1 - u, 3);
+    case 'inout': return u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+    case 'back': return _eOutBack(u); case 'bounce': return _eOutBounce(u);
+    case 'elastic': return u <= 0 ? 0 : u >= 1 ? 1 : Math.pow(2, -10 * u) * Math.sin((u * 10 - 0.75) * (2 * Math.PI / 3)) + 1;
+    case 'bezier': { const b = (c && c.kfBez) || [0.42, 0, 0.58, 1]; return kfBezier(+b[0], +b[1], +b[2], +b[3], u); }
+    default: return u * u * (3 - 2 * u);
+  }
+}
+/* Zeit im Clip → Zeit auf der Keyframe-Spur (Versatz, Rückwärts, Schleife, Pendeln) */
+function kfLocal(c, keys, local) {
+  const t0 = keys[0][0], t1 = keys[keys.length - 1][0], span = t1 - t0;
+  let l = local - (+c.kfOff || 0);
+  if (c.kfRev) l = clipLen(c) - local - (+c.kfOff || 0);
+  if (span > 1e-4 && (c.kfLoop === 'loop' || c.kfLoop === 'ping') && l > t0) {
+    const n = (l - t0) / span, k = Math.floor(n), fr = n - k;
+    l = t0 + span * (c.kfLoop === 'ping' && k % 2 ? 1 - fr : fr);
+  }
+  return l;
+}
 function kfValue(c, k, local) {
   const keys = c.kf && c.kf[k]; if (!keys || !keys.length) return c[k] != null ? c[k] : kfDefault(k);
+  local = kfLocal(c, keys, local);
   if (local <= keys[0][0]) return keys[0][1]; const last = keys[keys.length - 1]; if (local >= last[0]) return last[1];
-  for (let i = 0; i < keys.length - 1; i++) { const [t0, v0] = keys[i], [t1, v1] = keys[i + 1];
-    if (local >= t0 && local <= t1) { let u = (local - t0) / Math.max(1e-6, t1 - t0); const e = c.kfEase || 'smooth';
-      if (e === 'hold') u = 0; else if (e === 'smooth') u = u * u * (3 - 2 * u); return v0 + (v1 - v0) * u; } }
+  for (let i = 0; i < keys.length - 1; i++) { const [t0, v0, e0] = keys[i], [t1, v1] = keys[i + 1];
+    if (local >= t0 && local <= t1) { const u = (local - t0) / Math.max(1e-6, t1 - t0); return v0 + (v1 - v0) * kfEaseFn(e0 || c.kfEase || 'smooth', u, c); } }
   return last[1];
 }
 function msAnimated(c, t) {
@@ -19002,16 +19438,32 @@ const KF_MOVES = [
   ['Dreh-Einflug', c => ({ rot: [[0, -12], [Math.min(1.6, clipLen(c)), 0]], scale: [[0, 0.6], [Math.min(1.6, clipLen(c)), c.scale || 1]], opacity: [[0, 0], [Math.min(0.8, clipLen(c)), 1]] })],
   ['Ein- & Ausblenden', c => ({ opacity: [[0, 0], [Math.min(1, clipLen(c) / 4), 1], [Math.max(0, clipLen(c) - Math.min(1, clipLen(c) / 4)), 1], [clipLen(c), 0]] })],
   ['Farbreise', c => ({ lh: [[0, 0], [clipLen(c), 180]] })],
+  // Claud.io: weitere Bewegungs-Vorlagen (alle bleiben als normale Keyframes editierbar)
+  ['Elastisch erscheinen', c => ({ scale: [[0, 0.2, 'elastic'], [Math.min(1.4, clipLen(c)), c.scale || 1]], opacity: [[0, 0], [Math.min(0.3, clipLen(c)), 1]] })],
+  ['Pulsieren', c => { const b = msBarLen() / 4, s0 = c.scale || 1; return { __loop: 'loop', scale: [[0, s0 * 1.08, 'out'], [b, s0]] }; }],
+  ['Sanft schweben', c => ({ __loop: 'ping', y: [[0, 0.485, 'inout'], [2.4, 0.515]], rot: [[0, -1.5, 'inout'], [2.4, 1.5]] })],
+  ['Mechanische Drehung', c => ({ __loop: 'loop', rot: [[0, 0, 'inout'], [1, 90, 'hold'], [1.6, 90]] })],
+  ['Spirale', c => { const L = clipLen(c), n = 24, x = [], y = []; for (let i = 0; i <= n; i++) { const u = i / n, a = u * Math.PI * 6, r = 0.18 * (1 - u); x.push([+(u * L).toFixed(3), 0.5 + Math.cos(a) * r, 'linear']); y.push([+(u * L).toFixed(3), 0.5 + Math.sin(a) * r * 0.6, 'linear']); } return { x, y, scale: [[0, 0.5, 'out'], [L, c.scale || 1]] }; }],
+  ['Kontrolliertes Chaos', c => { const L = clipLen(c), r = msRand(Math.round((c.start || 0) * 100) + 7), x = [], y = [], rot = []; for (let t = 0; t <= L + 1e-6; t += 0.5) { x.push([+t.toFixed(3), 0.5 + (r() - 0.5) * 0.04, 'inout']); y.push([+t.toFixed(3), 0.5 + (r() - 0.5) * 0.04, 'inout']); rot.push([+t.toFixed(3), (r() - 0.5) * 6, 'inout']); } return { x, y, rot }; }],
+  ['Rhythmisch', c => { const b = msBarLen() / 4, s0 = c.scale || 1; return { __loop: 'loop', scale: [[0, s0, 'hold'], [b, s0 * 1.06, 'out'], [b * 2, s0]], rot: [[0, 0, 'hold'], [b * 2, 4, 'back'], [b * 4, 0]] }; }],
+  ['Kinoreif langsam', c => ({ scale: [[0, (c.scale || 1) * 1.04, 'inout'], [clipLen(c), (c.scale || 1) * 1.16]], x: [[0, 0.49, 'inout'], [clipLen(c), 0.51]], lb: [[0, 0.85, 'out'], [Math.min(2, clipLen(c)), 1]] })],
+  ['Geometrisch wachsen', c => ({ scale: [[0, 0, 'back'], [Math.min(0.9, clipLen(c)), c.scale || 1]], rot: [[0, -45, 'out'], [Math.min(0.9, clipLen(c)), 0]] })],
 ];
+let KF_CLIP = null; // Zwischenablage für Keyframes
 function msKeyframeGroup(c) {
   const local = clamp(MS.t - c.start, 0, clipLen(c)), props = KF_PROPS.filter(([k]) => c.type === 'gen' || !KF_GEN_ONLY.has(k)).filter(([k]) => !(c.type === 'adjust' && ['x', 'y', 'scale', 'rot'].includes(k)));
   const row = ([k, label]) => { const keys = (c.kf && c.kf[k]) || [], at = keys.some(q => Math.abs(q[0] - local) < 0.02);
-    return `<div class="kf-row ${keys.length ? 'has' : ''}"><span>${label}</span><em>${keys.length ? keys.length + ' ◆' : ''}</em>
+    const ki = keys.findIndex(q => Math.abs(q[0] - local) < 0.02), easeSel = ki >= 0 && ki < keys.length - 1 ? `<select class="kf-ease" data-kfease="${k}" title="Verlauf ab diesem Keyframe"><option value="">Wie Clip</option>${KF_EASES.map(([v, l]) => `<option value="${v}" ${keys[ki][2] === v ? 'selected' : ''}>${l}</option>`).join('')}</select>` : '';
+    return `<div class="kf-row ${keys.length ? 'has' : ''}"><span>${label}</span><em>${keys.length ? keys.length + ' ◆' : ''}</em>${easeSel}
       <button class="mini" data-kfprev="${k}" title="Vorheriger Keyframe" ${keys.length ? '' : 'disabled'}>◀</button><button class="mini kf-set ${at ? 'on' : ''}" data-kfset="${k}" title="Keyframe an der Abspielposition setzen">◆</button><button class="mini" data-kfnext="${k}" title="Nächster Keyframe" ${keys.length ? '' : 'disabled'}>▶</button>
       <button class="mini" data-kfdel="${k}" title="Keyframe hier entfernen · Rechtsklick: alle dieser Eigenschaft" ${keys.length ? '' : 'disabled'}>✕</button></div>`; };
   return group('Keyframes', `<p class="hint-txt" style="margin-top:0">Abspielkopf im Clip: <b>${fmtT(local, true)}</b>. Setze an zwei Zeitpunkten ◆ – dazwischen wird übergeblendet. Hat eine Eigenschaft Keyframes, setzt jedes Verändern ihres Reglers einen Keyframe an der Abspielposition.</p>
-    <div class="ctrl"><label>Verlauf</label><div class="seg" style="flex:1" data-mseg="kfEase">${[['smooth', 'Weich'], ['linear', 'Linear'], ['hold', 'Halten']].map(([v, l]) => `<button data-v="${v}" class="${(c.kfEase || 'smooth') === v ? 'on' : ''}">${l}</button>`).join('')}</div></div>
+    <div class="ctrl"><label>Verlauf</label><select data-kfclip="kfEase" style="flex:1">${KF_EASES.map(([v, l]) => `<option value="${v}" ${(c.kfEase || 'smooth') === v ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
+    ${(c.kfEase === 'bezier' || Object.values(c.kf || {}).some(a => a.some(q => q[2] === 'bezier'))) ? `<div class="ctrl"><label>Kurve</label>${[0, 1, 2, 3].map(i => `<input type="number" data-kfbez="${i}" step="0.05" min="${i % 2 ? -1 : 0}" max="${i % 2 ? 2 : 1}" value="${((c.kfBez || [0.42, 0, 0.58, 1])[i])}" style="width:52px">`).join('')}</div>` : ''}
+    <div class="ctrl"><label>Wiederholen</label><div class="seg" style="flex:1" data-kfseg="kfLoop">${[['', 'Einmal'], ['loop', 'Schleife'], ['ping', 'Pendeln']].map(([v, l]) => `<button data-v="${v}" class="${(c.kfLoop || '') === v ? 'on' : ''}">${l}</button>`).join('')}</div></div>
+    <div class="ctrl"><label>Versatz (s)</label><input type="number" data-kfclip="kfOff" step="0.05" value="${+c.kfOff || 0}" style="width:70px"><label class="check-row" style="margin:0 0 0 8px"><input type="checkbox" data-kfclip="kfRev" ${c.kfRev ? 'checked' : ''}> Rückwärts</label></div>
     <div class="kf-list">${props.map(row).join('')}</div>
+    <div class="mini-btns" style="margin-top:6px"><button class="mini" data-kfcopy ${c.kf && Object.keys(c.kf).length ? '' : 'disabled'}>Keyframes kopieren</button><button class="mini" data-kfpaste ${KF_CLIP ? '' : 'disabled'}>Einfügen</button><button class="mini" data-kfdup ${msKeyTimes(c).length ? '' : 'disabled'} title="Alle Keyframes ab der Abspielposition wiederholen">Ab hier wiederholen</button></div>
     <label class="lbl" style="margin-top:10px">Kamerafahrten</label><div class="kf-moves">${KF_MOVES.map(([n], i) => `<button class="mini" data-kfmove="${i}">${n}</button>`).join('')}</div>
     ${c.kf && Object.keys(c.kf).some(k => c.kf[k].length) ? '<button class="mini" data-kfclear style="margin-top:8px;width:100%">Alle Keyframes entfernen</button>' : ''}`);
 }
@@ -19023,7 +19475,16 @@ function msBindKeyframes(box, c) {
   box.querySelectorAll('[data-kfdel]').forEach(b => {
     b.addEventListener('click', () => { const k = b.dataset.kfdel; c.kf[k] = (c.kf[k] || []).filter(q => Math.abs(q[0] - local()) >= 0.02); msSnap(); msBuildInspector(); msBuildTimeline(); msRender(); });
     b.addEventListener('contextmenu', e => { e.preventDefault(); delete c.kf[b.dataset.kfdel]; msSnap(); msBuildInspector(); msBuildTimeline(); msRender(); }); });
-  box.querySelectorAll('[data-kfmove]').forEach(b => b.addEventListener('click', () => { c.kf = { ...(c.kf || {}), ...KF_MOVES[+b.dataset.kfmove][1](c) }; msSnap(); msBuildInspector(); msBuildTimeline(); msRender(); }));
+  const kfDone = () => { msSnap(); msBuildInspector(); msBuildTimeline(); msRender(); };
+  box.querySelectorAll('[data-kfmove]').forEach(b => b.addEventListener('click', () => { const r = KF_MOVES[+b.dataset.kfmove][1](c); if (r.__loop) { c.kfLoop = r.__loop; delete r.__loop; } c.kf = { ...(c.kf || {}), ...r }; kfDone(); }));
+  box.querySelectorAll('[data-kfease]').forEach(sel => sel.addEventListener('change', () => { const keys = c.kf[sel.dataset.kfease] || [], i = keys.findIndex(q => Math.abs(q[0] - local()) < 0.02); if (i >= 0) { if (sel.value) keys[i][2] = sel.value; else keys[i].length = 2; } kfDone(); }));
+  box.querySelectorAll('[data-kfclip]').forEach(inp => inp.addEventListener('change', () => { const k = inp.dataset.kfclip; c[k] = inp.type === 'checkbox' ? inp.checked : inp.type === 'number' ? +inp.value : inp.value; kfDone(); }));
+  box.querySelectorAll('[data-kfbez]').forEach(inp => inp.addEventListener('input', () => { c.kfBez = (c.kfBez || [0.42, 0, 0.58, 1]).slice(); c.kfBez[+inp.dataset.kfbez] = +inp.value; msRender(); }));
+  box.querySelectorAll('[data-kfseg] button').forEach(b => b.addEventListener('click', () => { c[b.parentElement.dataset.kfseg] = b.dataset.v || undefined; kfDone(); }));
+  box.querySelector('[data-kfcopy]')?.addEventListener('click', () => { KF_CLIP = { kf: JSON.parse(JSON.stringify(c.kf || {})), kfEase: c.kfEase, kfBez: c.kfBez, kfLoop: c.kfLoop }; toast('Keyframes kopiert – im nächsten Clip „Einfügen“.', 'ok', 1800); msBuildInspector(); });
+  box.querySelector('[data-kfpaste]')?.addEventListener('click', () => { if (!KF_CLIP) return; c.kf = { ...(c.kf || {}), ...JSON.parse(JSON.stringify(KF_CLIP.kf)) }; ['kfEase', 'kfBez', 'kfLoop'].forEach(k => { if (KF_CLIP[k] != null) c[k] = KF_CLIP[k]; }); kfDone(); });
+  box.querySelector('[data-kfdup]')?.addEventListener('click', () => { const l = local(), ts = msKeyTimes(c); if (!ts.length) return; const span = ts[ts.length - 1] - ts[0], sh = Math.max(l, ts[ts.length - 1] + 0.05) - ts[0];
+    Object.keys(c.kf).forEach(k => { const add = c.kf[k].map(q => [+(q[0] + sh).toFixed(3), q[1], ...(q[2] ? [q[2]] : [])]).filter(q => q[0] <= clipLen(c) + 1e-6); c.kf[k] = c.kf[k].concat(add).sort((a, b) => a[0] - b[0]); }); if (span <= 0) return; kfDone(); });
   box.querySelectorAll('[data-kfclear]').forEach(b => b.addEventListener('click', () => { delete c.kf; msSnap(); msBuildInspector(); msBuildTimeline(); msRender(); }));
 }
 
@@ -19533,7 +19994,7 @@ function msApplyMask(L, c) {
 const MS_LUTGL = { gl: null, cv: null, prog: null, tex: null, luts: new Map() };
 function msLutGL() {
   if (MS_LUTGL.gl) return MS_LUTGL;
-  const cv = document.createElement('canvas'), gl = cv.getContext('webgl', { premultipliedAlpha: false, preserveDrawingBuffer: true }); if (!gl) return null;
+  const cv = document.createElement('canvas'), gl = cv.getContext('webgl', { premultipliedAlpha: false, preserveDrawingBuffer: true, powerPreference: 'high-performance' }); if (!gl) return null;
   const sh = (t, s) => { const o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); if (!gl.getShaderParameter(o, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(o)); return o; };
   const p = gl.createProgram();
   gl.attachShader(p, sh(gl.VERTEX_SHADER, 'attribute vec2 p; varying vec2 v; void main(){ v = vec2(p.x * 0.5 + 0.5, 0.5 - p.y * 0.5); gl_Position = vec4(p, 0.0, 1.0); }'));
@@ -20063,7 +20524,11 @@ async function msPickCodecs(w, h, fps, bps) {
   const vids = [['avc1.640033','avc'],['avc1.4d0033','avc'],['avc1.42003e','avc'],['vp09.00.40.08','vp9'],['av01.0.08M.08','av1']];
   let video = null;
   for (const [codec, mux] of vids) {
-    try { const r = await VideoEncoder.isConfigSupported({ codec, width: w, height: h, bitrate: bps, framerate: fps }); if (r.supported) { video = { codec, mux }; break; } } catch (e) {}
+    // Claud.io: Hardware-Encoder zuerst (GPU), sonst Software
+    for (const hw of ['prefer-hardware', null]) {
+      try { const r = await VideoEncoder.isConfigSupported({ codec, width: w, height: h, bitrate: bps, framerate: fps, ...(hw ? { hardwareAcceleration: hw } : {}) }); if (r.supported) { video = { codec, mux, hw }; break; } } catch (e) {}
+    }
+    if (video) break;
   }
   let audio = null;
   for (const [codec, mux, br] of [['mp4a.40.2','aac',320000],['opus','opus',256000]]) {
@@ -20127,7 +20592,7 @@ async function msEncodeMp4(name, opt = {}) {
     ...(noAudio ? {} : { audio: { codec: codecs.audio.mux, sampleRate: 48000, numberOfChannels: 2 } }) });
   let failure = null;
   const venc = new VideoEncoder({ output: (ch, meta) => muxer.addVideoChunk(ch, meta), error: e => failure = e });
-  venc.configure({ codec: codecs.video.codec, width: W, height: H, bitrate: bps, framerate: fps, latencyMode: 'quality', ...(codecs.video.mux === 'avc' ? { avc: { format: 'avc' } } : {}) });
+  venc.configure({ codec: codecs.video.codec, width: W, height: H, bitrate: bps, framerate: fps, latencyMode: 'quality', ...(codecs.video.hw ? { hardwareAcceleration: codecs.video.hw } : {}), ...(codecs.video.mux === 'avc' ? { avc: { format: 'avc' } } : {}) });
   const aenc = noAudio ? { encode() {}, flush: async () => {}, close() {}, encodeQueueSize: 0 } : new AudioEncoder({ output: (ch, meta) => muxer.addAudioChunk(ch, meta), error: e => failure = e });
   if (!noAudio) aenc.configure({ codec: codecs.audio.codec, sampleRate: 48000, numberOfChannels: 2, bitrate: codecs.audio.br });
 
@@ -20752,7 +21217,7 @@ async function convFastVideo(f, onP, opt = {}) {
     ...(A0 ? { audio: { codec: codecs.audio.mux, sampleRate: 48000, numberOfChannels: 2 } } : {}) });
   let failure = null;
   const venc = new VideoEncoder({ output: (ch, meta) => muxer.addVideoChunk(ch, meta), error: e => failure = e });
-  venc.configure({ codec: codecs.video.codec, width: W, height: H, bitrate: opt.hevc ? Math.round(bps * 0.6) : bps, framerate: fps, latencyMode: 'quality', ...(codecs.video.mux === 'avc' ? { avc: { format: 'avc' } } : codecs.video.mux === 'hevc' ? { hevc: { format: 'hevc' } } : {}) });
+  venc.configure({ codec: codecs.video.codec, width: W, height: H, bitrate: opt.hevc ? Math.round(bps * 0.6) : bps, framerate: fps, latencyMode: 'quality', ...(codecs.video.hw ? { hardwareAcceleration: codecs.video.hw } : {}), ...(codecs.video.mux === 'avc' ? { avc: { format: 'avc' } } : codecs.video.mux === 'hevc' ? { hevc: { format: 'hevc' } } : {}) });
   const needCanvas = W !== srcW || H !== srcH || rot !== 0;
   const cv = needCanvas ? document.createElement('canvas') : null, cx = cv ? (cv.width = W, cv.height = H, cv.getContext('2d')) : null;
   const t0 = Math.round(s0 * 1e6), t1 = Math.round(e0 * 1e6), gop = Math.max(1, Math.round(fps * 2));
@@ -21238,7 +21703,601 @@ init();
 updateBgrPanel();
 
 /* Claud.io: the few engine functions the desktop bridge needs */
-window.__studio = { loadProject, toast, CMD_ACTIONS, CLOSABLE_MODALS, loadScript, X_CDN, D3_BASE };
+/* ═════════ Claud.io 1.1 · Engine-Erweiterungen ═════════
+   1. Mehr Audio-Quellen (Sub-Bass, tiefe Mitten, Präsenz, Transienten, Stereobreite, Energie)
+   2. Modulations-Matrix: Schwelle, Kurve, Attack/Release, Min/Max, Versatz, Umkehren, Profile
+   3. Live-Eingang (Mikrofon / Line-In) – nur auf Wunsch, nichts wird aufgezeichnet
+   4. Zehn neue Visualizer, neue Presets
+   5. Sechs neue Shader, vier neue Video-Effekte
+   Alles bleibt zeitbasiert: gleiche Zeit = gleiches Bild → Vorschau = Export.
+   (Ausnahme: der Live-Eingang, der beim Export automatisch aus ist.) */
+const CI = { mic: { on: false, busy: false, gainV: 1, hist: [], last: 0, frame: null }, modOpen: new Set(), modClip: null };
+
+/* ── 1. Zusätzliche Audio-Merkmale (einmal je Track, aus den 48 Bändern) ── */
+function ciExtras(fx) {
+  if (!fx || fx.sub) return fx;
+  const n = fx.frames, B = FX_BANDS, sub = new Float32Array(n), lowmid = new Float32Array(n), pres = new Float32Array(n), flux = new Float32Array(n), energy = new Float32Array(n);
+  const avg = (f, lo, hi) => { let s = 0; for (let b = lo; b < hi; b++) s += fx.bands[f * B + b]; return s / (hi - lo); };
+  for (let f = 0; f < n; f++) {
+    sub[f] = avg(f, 0, 6); lowmid[f] = avg(f, 16, 27); pres[f] = avg(f, 37, 48); energy[f] = avg(f, 0, B);
+    if (f) { let s = 0; for (let b = 0; b < B; b++) { const d = fx.bands[f * B + b] - fx.bands[(f - 1) * B + b]; if (d > 0) s += d; } flux[f] = s / B; }
+  }
+  const norm98 = arr => { const tmp = Array.from(arr).sort((x, y) => x - y), ref = tmp[Math.floor(tmp.length * 0.98)] || 1; for (let i = 0; i < arr.length; i++) arr[i] = clamp(arr[i] / ref, 0, 1); };
+  norm98(flux); norm98(sub);
+  { let v = 0; for (let f = 0; f < n; f++) { v = Math.max(flux[f], v * 0.82); flux[f] = v; } } // Transienten: schneller Anstieg, kurzes Abklingen
+  if (!fx.width) fx.width = new Float32Array(n);
+  Object.assign(fx, { sub, lowmid, pres, flux, energy });
+  return fx;
+}
+/* Wert einer Quelle in einem bestimmten Analyse-Bild (für Attack/Release-Hüllkurven) */
+function ciSrcFrame(fx, a, i, src) {
+  i = clamp(i, 0, fx.frames - 1);
+  switch (src) {
+    case 'kick': case 'snare': case 'hat': case 'rms': return fx[src] ? fx[src][i] : 0;
+    case 'bass': case 'high': case 'sub': case 'lowmid': case 'pres': case 'flux': case 'width': case 'energy': return fx[src] ? fx[src][i] : 0;
+    case 'mid': { let m = 0; for (let b = 12; b < 32; b++) m += fx.bands[i * FX_BANDS + b]; return m / 20; }
+    case 'beat': case 'bar': { const bt = a && a.beat; if (!bt || !bt.period) return 0; const ph = (i / FX_RATE - bt.offset) / bt.period; return src === 'beat' ? Math.exp(-(((ph % 1) + 1) % 1) * 6) : (((ph / 4) % 1) + 1) % 1; }
+  }
+  return 0;
+}
+const _ciFxAt = msFxAt;
+msFxAt = function (t) {
+  if (CI.mic.on && !MS.exporting) { const L = ciMicFrame(); if (L) return L; }
+  const f = _ciFxAt(t); if (!f || !f.a || !f.a.fx) return f;
+  const fx = ciExtras(f.a.fx), ft = f.ta * FX_RATE, i0 = clamp(Math.floor(ft), 0, fx.frames - 1), i1 = Math.min(i0 + 1, fx.frames - 1), w = clamp(ft - i0, 0, 1);
+  const L = arr => arr ? arr[i0] * (1 - w) + arr[i1] * w : 0;
+  f.sub = L(fx.sub); f.lowmid = L(fx.lowmid); f.pres = L(fx.pres); f.flux = L(fx.flux); f.width = L(fx.width); f.energy = L(fx.energy);
+  return f;
+};
+const CI_SRC_NEW = [['sub', 'Sub-Bass'], ['lowmid', 'Tiefe Mitten'], ['pres', 'Präsenz'], ['flux', 'Transienten'], ['width', 'Stereobreite'], ['energy', 'Energie']];
+const CI_SRC_KEYS = new Set(CI_SRC_NEW.map(([k]) => k));
+MOD_SRC.push(...CI_SRC_NEW); D3_SRC.push(...CI_SRC_NEW);
+const _ciModSrc = msModSrc; msModSrc = function (src, f) { return CI_SRC_KEYS.has(src) ? (f && f[src]) || 0 : _ciModSrc(src, f); };
+const _ciD3Src = d3Src; d3Src = function (au, s) { return CI_SRC_KEYS.has(s) ? (au && au[s]) || 0 : _ciD3Src(au, s); };
+const _ciFakeAu = d3FakeAudio;
+d3FakeAudio = function (t, ...rest) {
+  if (CI.mic.on) { const L = ciMicFrame(); if (L) return L; }
+  const a = _ciFakeAu(t, ...rest); if (!a) return a;
+  if (a.sub == null) Object.assign(a, { sub: a.bass * 0.9, lowmid: (a.mid + a.bass) / 2, pres: a.high * 0.9, flux: Math.max(a.kick, a.snare * 0.8, a.hat * 0.5), width: 0.35 + 0.15 * Math.sin(t * 0.7), energy: a.rms });
+  return a;
+};
+
+/* ── 2. Modulations-Matrix ── */
+const CI_CURVES = [['lin', 'Linear'], ['exp', 'Weich (exponentiell)'], ['log', 'Stark (logarithmisch)'], ['smooth', 'S-Kurve'], ['step', 'Schalter']];
+MOD_DST.push(['sat', 'Sättigung'], ['sens', 'Visualizer-Stärke'], ['glow', 'Leuchten'], ['gint', 'Shader-Intensität'], ['gzoom', 'Shader-Zoom'], ['gdet', 'Shader-Detail'], ['gwarp', 'Shader-Verzerrung']);
+const CI_MOD_BUILTIN = [
+  ['Kick → Geometrie', [{ src: 'kick', dst: 'scale', amt: 0.35, rel: 0.12 }, { src: 'kick', dst: 'rot', amt: 0.12, curve: 'exp' }]],
+  ['Bass → Verformung', [{ src: 'sub', dst: 'gwarp', amt: 0.8, att: 0.03, rel: 0.25 }, { src: 'bass', dst: 'scale', amt: 0.15, rel: 0.2 }]],
+  ['Hi-Hat → Funkeln', [{ src: 'hat', dst: 'bright', amt: 0.45, thr: 0.25, rel: 0.06 }, { src: 'hat', dst: 'glow', amt: 0.6, rel: 0.08 }]],
+  ['Snare → Licht', [{ src: 'snare', dst: 'bright', amt: 0.7, curve: 'exp', rel: 0.15 }, { src: 'snare', dst: 'shake', amt: 0.35, thr: 0.3 }]],
+  ['Takt → Drehung', [{ src: 'bar', dst: 'rot', amt: 0.5, curve: 'smooth' }]],
+  ['Breite → Farbe', [{ src: 'width', dst: 'hue', amt: 0.5, att: 0.2, rel: 0.6 }, { src: 'width', dst: 'sat', amt: 0.4 }]],
+  ['Energie → Atmen', [{ src: 'energy', dst: 'scale', amt: 0.12, att: 0.3, rel: 0.9 }, { src: 'energy', dst: 'opacity', amt: 0.25, att: 0.2, rel: 0.6 }]],
+  ['Transienten → Glitch', [{ src: 'flux', dst: 'shake', amt: 0.6, thr: 0.45, curve: 'step', rel: 0.05 }, { src: 'flux', dst: 'hue', amt: 0.25, thr: 0.45 }]],
+];
+const CI_PROF_KEY = 'claudio_modprofiles_v1';
+function ciProfiles() { try { return JSON.parse(localStorage.getItem(CI_PROF_KEY) || '[]'); } catch (e) { return []; } }
+function ciSaveProfiles(list) { try { localStorage.setItem(CI_PROF_KEY, JSON.stringify(list)); } catch (e) { toast('Profil konnte nicht gespeichert werden (Speicher voll?).', 'err', 2600); } }
+function ciShapePre(m, s) {
+  const thr = clamp(+m.thr || 0, 0, 0.95); if (thr > 0) s = s <= thr ? 0 : (s - thr) / (1 - thr);
+  switch (m.curve) { case 'exp': s = s * s; break; case 'log': s = Math.sqrt(s); break; case 'smooth': s = s * s * (3 - 2 * s); break; case 'step': s = s >= 0.5 ? 1 : 0; break; }
+  return clamp(s, 0, 1);
+}
+function ciShapePost(m, s) { if (m.inv) s = 1 - s; const lo = m.min != null ? +m.min : 0, hi = m.max != null ? +m.max : 1; return lo + (hi - lo) * s; }
+/* Hüllkurve rein aus der Zeit berechnet: die letzten Analyse-Bilder werden nachgefahren (max. 2 s) */
+function ciModValue(m, f) {
+  const att = Math.max(0, +m.att || 0), rel = Math.max(0, +m.rel || 0), now = ciShapePre(m, msModSrc(m.src, f));
+  if (!(att > 0.001 || rel > 0.001) || !f.a || !f.a.fx) return ciShapePost(m, now);
+  const fx = f.a.fx, fr = Math.floor(f.ta * FX_RATE), win = Math.min(120, Math.ceil(Math.max(att, rel) * FX_RATE * 4) + 2);
+  const ka = att > 0.001 ? 1 - Math.exp(-1 / (att * FX_RATE)) : 1, kr = rel > 0.001 ? 1 - Math.exp(-1 / (rel * FX_RATE)) : 1;
+  msOnsets(f.a); ciExtras(fx);
+  let v = 0; for (let k = win; k >= 1; k--) { const i = fr - k; if (i < 0) continue; const x = ciShapePre(m, ciSrcFrame(fx, f.a, i, m.src)); v += (x - v) * (x > v ? ka : kr); }
+  v += (now - v) * (now > v ? ka : kr);
+  return ciShapePost(m, v);
+}
+msApplyMods = function (o, c, t) {
+  const f = msFxAt(t); if (!f) return o;
+  for (const m of c.mods) {
+    if (m.off === true) continue;
+    const amt = m.amt != null ? +m.amt : 0.5, s = ciModValue(m, f), v = s * amt + (+m.ofs || 0);
+    switch (m.dst) {
+      case 'scale': o.scale = (o.scale || 1) * Math.max(0.05, 1 + v * 0.6); break;
+      case 'rot': o.rot = (o.rot || 0) + v * (m.src === 'bar' ? 90 : 30); break;
+      case 'x': o.x = (o.x != null ? o.x : 0.5) + v * 0.15; break;
+      case 'y': o.y = (o.y != null ? o.y : 0.5) - v * 0.15; break;
+      case 'opacity': { const a = Math.abs(amt), k = amt >= 0 ? s : 1 - s; o.opacity = clamp((o.opacity != null ? o.opacity : 1) * (1 - a + a * k) + (+m.ofs || 0), 0, 1); break; }
+      case 'shake': { const r = msRand(Math.floor(t * 30) * 7 + 3); o.x = (o.x != null ? o.x : 0.5) + (r() - 0.5) * v * 0.05; o.y = (o.y != null ? o.y : 0.5) + (r() - 0.5) * v * 0.05; o.rot = (o.rot || 0) + (r() - 0.5) * v * 8; break; }
+      case 'bright': o.lb = (o.lb != null ? o.lb : 1) * Math.max(0, 1 + v * 1.2); break;
+      case 'hue': o.lh = (o.lh || 0) + v * 180; break;
+      case 'blur': o.lblur = (o.lblur || 0) + Math.max(0, v) * 14; break;
+      case 'sat': o.ls = Math.max(0, (o.ls != null ? o.ls : 1) * (1 + v)); break;
+      case 'sens': o.sens = Math.max(0, (o.sens != null ? o.sens : 1) * (1 + v)); break;
+      case 'glow': o.glow = true; o.glowAmt = Math.max(0, (o.glowAmt != null ? o.glowAmt : 0.6) + v); break;
+      case 'gint': o.gint = Math.max(0, (o.gint != null ? o.gint : 1) * (1 + v)); break;
+      case 'gzoom': o.gzoom = clamp((o.gzoom != null ? o.gzoom : 0.5) + v * 0.5, 0, 1); break;
+      case 'gdet': o.gdet = clamp((o.gdet != null ? o.gdet : 0.5) + v * 0.5, 0, 1); break;
+      case 'gwarp': o.gwarp = Math.max(0, (o.gwarp || 0) + v); break;
+    }
+  }
+  return o;
+};
+/* Inspektor: erweiterte Regler je Modulation, Profile, Kopieren/Einfügen */
+function ciModRowExtra(c, m, i) {
+  const key = c.id + ':' + i, open = CI.modOpen.has(key);
+  const r = (l, k, mn, mx, st, def, u = '') => { const v = m[k] != null ? +m[k] : def; return `<div class="ctrl"><label>${l}</label><input type="range" data-mx="${k}" min="${mn}" max="${mx}" step="${st}" value="${v}"><span class="val">${v.toFixed(2)}${u}</span></div>`; };
+  return `<div class="mod-adv ${open ? 'open' : ''}" data-mi="${i}">${open ? `
+    ${r('Versatz', 'ofs', -1, 1, 0.01, 0)}${r('Minimum', 'min', 0, 1, 0.01, 0)}${r('Maximum', 'max', 0, 1, 0.01, 1)}${r('Schwelle', 'thr', 0, 0.95, 0.01, 0)}
+    <div class="ctrl"><label>Kurve</label><select data-mx="curve" style="flex:1">${CI_CURVES.map(([k, l]) => `<option value="${k}" ${(m.curve || 'lin') === k ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
+    ${r('Attack (s)', 'att', 0, 1, 0.01, 0)}${r('Release (s)', 'rel', 0, 2, 0.01, 0)}
+    <label class="check-row"><input type="checkbox" data-mx="inv" ${m.inv ? 'checked' : ''}> Umkehren</label><label class="check-row"><input type="checkbox" data-mx="off" ${m.off === true ? 'checked' : ''}> Stumm (vorübergehend aus)</label>` : ''}</div>`;
+}
+const _ciInspector = msBuildInspector;
+msBuildInspector = function () {
+  _ciInspector();
+  const box = $('#msInspector'), c = msSelClip(); if (!box || !c || c.type === 'audio') return;
+  const list = box.querySelector('.mod-list'); if (!list) return;
+  // Zeilen um „⋯“ (erweitert) ergänzen
+  list.querySelectorAll('.mod-row').forEach(row => { const i = +row.dataset.mi, m = c.mods[i]; if (!m) return;
+    const del = row.querySelector('[data-mdel]'), b = document.createElement('button'); b.className = 'mini mod-more' + (CI.modOpen.has(c.id + ':' + i) ? ' on' : ''); b.textContent = '⋯'; b.title = 'Feineinstellung: Schwelle, Kurve, Attack/Release, Bereich';
+    b.dataset.mmore = i; const wrap = document.createElement('span'); wrap.className = 'mod-btns'; row.insertBefore(wrap, del); wrap.append(b, del); row.insertAdjacentHTML('afterend', ciModRowExtra(c, m, i)); });
+  const prof = ciProfiles(), pre = list.parentElement.querySelector('.mod-presets');
+  if (pre) pre.insertAdjacentHTML('beforeend', CI_MOD_BUILTIN.map(([n], i) => `<button class="mini" data-mbi="${i}">${n}</button>`).join(''));
+  list.parentElement.insertAdjacentHTML('beforeend', `<div class="mod-prof">
+    <label class="lbl">Profile</label>
+    <div class="ctrl"><select data-mprof style="flex:1"><option value="">Gespeicherte Profile …</option>${prof.map((p, i) => `<option value="${i}">${esc(p.name)} (${p.mods.length})</option>`).join('')}</select>
+      <button class="mini" data-mprofload title="Profil zu diesem Clip hinzufügen">Laden</button><button class="mini" data-mprofrep title="Modulationen dieses Clips durch das Profil ersetzen">Ersetzen</button></div>
+    <div class="ctrl"><input type="text" data-mprofname placeholder="Name für neues Profil" maxlength="40" style="flex:1"><button class="mini" data-mprofsave ${(c.mods || []).length ? '' : 'disabled'}>Speichern</button></div>
+    <div class="mini-btns"><button class="mini" data-mprofdup>Duplizieren</button><button class="mini danger" data-mprofdel>Profil löschen</button><button class="mini" data-mcopy ${(c.mods || []).length ? '' : 'disabled'}>Kopieren</button><button class="mini" data-mpaste ${CI.modClip ? '' : 'disabled'}>Einfügen</button></div></div>`);
+  const done = rebuild => { msSnap(); if (rebuild) msBuildInspector(); msRender(); };
+  box.querySelectorAll('[data-mmore]').forEach(b => b.addEventListener('click', () => { const k = c.id + ':' + b.dataset.mmore; CI.modOpen.has(k) ? CI.modOpen.delete(k) : CI.modOpen.add(k); msBuildInspector(); }));
+  box.querySelectorAll('.mod-adv [data-mx]').forEach(inp => { const m = c.mods[+inp.closest('.mod-adv').dataset.mi], k = inp.dataset.mx;
+    inp.addEventListener(inp.type === 'range' ? 'input' : 'change', () => { m[k] = inp.type === 'checkbox' ? inp.checked : inp.type === 'range' ? +inp.value : inp.value;
+      const vs = inp.parentElement.querySelector('.val'); if (vs) vs.textContent = (+inp.value).toFixed(2); if (inp.type !== 'range') done(false); else msRender(); });
+    if (inp.type === 'range') inp.addEventListener('change', () => done(false)); });
+  box.querySelectorAll('[data-mbi]').forEach(b => b.addEventListener('click', () => { c.mods = (c.mods || []).concat(CI_MOD_BUILTIN[+b.dataset.mbi][1].map(m => ({ ...m }))); done(true); }));
+  const sel = () => { const v = box.querySelector('[data-mprof]').value; return v === '' ? null : +v; };
+  box.querySelector('[data-mprofload]').addEventListener('click', () => { const i = sel(), P = ciProfiles()[i]; if (!P) return; c.mods = (c.mods || []).concat(P.mods.map(m => ({ ...m }))); done(true); });
+  box.querySelector('[data-mprofrep]').addEventListener('click', () => { const i = sel(), P = ciProfiles()[i]; if (!P) return; c.mods = P.mods.map(m => ({ ...m })); done(true); });
+  box.querySelector('[data-mprofsave]').addEventListener('click', () => { const inp = box.querySelector('[data-mprofname]'), name = (inp.value || '').trim() || ('Profil ' + (ciProfiles().length + 1));
+    const L = ciProfiles(); L.push({ name, mods: JSON.parse(JSON.stringify(c.mods || [])) }); ciSaveProfiles(L); toast(`Profil „${esc(name)}“ gespeichert.`, 'ok', 1800); msBuildInspector(); });
+  box.querySelector('[data-mprofdup]').addEventListener('click', () => { const i = sel(), L = ciProfiles(); if (i == null || !L[i]) return; L.push({ name: L[i].name + ' (Kopie)', mods: JSON.parse(JSON.stringify(L[i].mods)) }); ciSaveProfiles(L); msBuildInspector(); });
+  box.querySelector('[data-mprofdel]').addEventListener('click', () => { const i = sel(), L = ciProfiles(); if (i == null || !L[i]) return; L.splice(i, 1); ciSaveProfiles(L); msBuildInspector(); });
+  box.querySelector('[data-mcopy]').addEventListener('click', () => { CI.modClip = JSON.parse(JSON.stringify(c.mods || [])); toast('Modulationen kopiert.', 'ok', 1400); msBuildInspector(); });
+  box.querySelector('[data-mpaste]').addEventListener('click', () => { if (!CI.modClip) return; c.mods = (c.mods || []).concat(CI.modClip.map(m => ({ ...m }))); done(true); });
+};
+
+/* ── 3. Live-Eingang ── */
+async function ciMicStart() {
+  const M = CI.mic; if (M.on || M.busy) return;
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { toast('Dieser Browser bietet keinen Zugriff auf Audio-Eingänge.', 'err', 3200); return; }
+  M.busy = true; ciMicUI();
+  try {
+    M.stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+    M.ctx = new (window.AudioContext || window.webkitAudioContext)(); M.src = M.ctx.createMediaStreamSource(M.stream); M.gain = M.ctx.createGain(); M.gain.gain.value = M.gainV;
+    M.an = M.ctx.createAnalyser(); M.an.fftSize = 2048; M.an.smoothingTimeConstant = 0.3; M.src.connect(M.gain); M.gain.connect(M.an); // bewusst NICHT an die Lautsprecher
+    M.fb = new Float32Array(M.an.frequencyBinCount); M.tb = new Float32Array(M.an.fftSize); M.prev = new Float32Array(FX_BANDS); M.sm = new Float32Array(FX_BANDS); M.env = { kick: 0, snare: 0, hat: 0, flux: 0 }; M.hist = [];
+    const sr = M.ctx.sampleRate; M.edges = []; for (let b = 0; b <= FX_BANDS; b++) M.edges.push(Math.max(1, Math.round(30 * Math.pow(16000 / 30, b / FX_BANDS) / sr * 2048)));
+    const label = (M.stream.getAudioTracks()[0] || {}).label || 'Audio-Eingang';
+    M.label = label; M.on = true; toast(`Live-Eingang aktiv: ${esc(label)}`, 'ok', 2200); ciMicLoop();
+  } catch (e) {
+    const n = e && e.name; toast(n === 'NotAllowedError' || n === 'SecurityError' ? 'Zugriff auf das Mikrofon wurde verweigert. Du kannst ihn in den System- bzw. Browser-Einstellungen erlauben.' : n === 'NotFoundError' ? 'Kein Audio-Eingang gefunden.' : 'Live-Eingang konnte nicht gestartet werden: ' + esc(e.message || String(e)), 'err', 4200);
+    ciMicStop(true);
+  } finally { M.busy = false; ciMicUI(); }
+}
+function ciMicStop(quiet) {
+  const M = CI.mic; M.on = false; M.frame = null; M.hist = [];
+  try { M.stream && M.stream.getTracks().forEach(t => t.stop()); } catch (e) {}
+  try { M.ctx && M.ctx.close(); } catch (e) {}
+  M.stream = M.ctx = M.an = M.src = M.gain = null; cancelAnimationFrame(M.raf); ciMicUI();
+  if (!quiet) { toast('Live-Eingang beendet – Visuals folgen wieder dem Track.', '', 2000); if (MS.open) msRender(); }
+}
+function ciMicFrame() {
+  const M = CI.mic; if (!M.on || !M.an) return null; const now = performance.now(); if (M.frame && now - M.last < 12) return M.frame;
+  M.an.getFloatFrequencyData(M.fb); M.an.getFloatTimeDomainData(M.tb);
+  const bands = new Float32Array(FX_BANDS), B = FX_BANDS;
+  for (let b = 0; b < B; b++) { let m = -160; const e = Math.max(M.edges[b] + 1, M.edges[b + 1]); for (let k = M.edges[b]; k < e && k < M.fb.length; k++) m = Math.max(m, M.fb[k]);
+    const x = clamp(1 + (m + 28) / 48, 0, 1), v = M.sm[b]; M.sm[b] = x > v ? v + (x - v) * 0.61 : v + (x - v) * 0.134; bands[b] = M.sm[b]; }
+  const avg = (lo, hi) => { let s = 0; for (let b = lo; b < hi; b++) s += bands[b]; return s / (hi - lo); };
+  const fl = (lo, hi) => { let s = 0; for (let b = lo; b < hi; b++) { const d = bands[b] - M.prev[b]; if (d > 0) s += d; } return s / (hi - lo); };
+  const E = M.env; E.kick = Math.max(clamp(fl(0, 9) * 9, 0, 1), E.kick * 0.86); E.snare = Math.max(clamp(fl(17, 34) * 10, 0, 1), E.snare * 0.86); E.hat = Math.max(clamp(fl(36, 48) * 12, 0, 1), E.hat * 0.8); E.flux = Math.max(clamp(fl(0, B) * 10, 0, 1), E.flux * 0.82);
+  M.prev.set(bands); let r = 0; for (let i = 0; i < M.tb.length; i++) r += M.tb[i] * M.tb[i]; r = clamp(Math.sqrt(r / M.tb.length) * 4, 0, 1);
+  const bass = avg(0, 10), f = { bands, bass, high: avg(37, 48), mid: avg(12, 32), kick: E.kick, snare: E.snare, hat: E.hat, rms: r, sub: avg(0, 6), lowmid: avg(16, 27), pres: avg(37, 48), flux: E.flux, width: 0, energy: avg(0, B), live: true, ta: now / 1000 };
+  M.hist.push(bands); if (M.hist.length > 180) M.hist.shift(); M.last = now; M.frame = f;
+  const meter = document.getElementById('ciLiveMeter'); if (meter) meter.style.setProperty('--lv', Math.min(1, r * 1.4).toFixed(3));
+  return f;
+}
+function ciMicLoop() { const M = CI.mic; if (!M.on) return; M.raf = requestAnimationFrame(ciMicLoop); if (MS.open && !MS.playing) msRender(); if (D3.st && document.querySelector('#d3Modal.show')) try { d3Kick(); } catch (e) {} }
+function ciMicUI() {
+  const tools = document.querySelector('.ms-tl-tools'); if (!tools) return; let w = document.getElementById('ciLive');
+  if (!w) { w = document.createElement('div'); w.id = 'ciLive'; w.className = 'ci-live'; tools.insertBefore(w, tools.querySelector('.top-spacer')); }
+  const M = CI.mic;
+  w.innerHTML = M.on ? `<span class="ci-live-dot" aria-hidden="true"></span><span class="ci-live-lbl" title="${esc(M.label || '')}">Live</span><span class="ci-live-meter" id="ciLiveMeter" aria-hidden="true"></span>
+      <input type="range" min="0.25" max="4" step="0.05" value="${M.gainV}" data-cimicgain title="Eingangs-Verstärkung" aria-label="Eingangs-Verstärkung"><button class="mini" data-cimic="stop" title="Live-Eingang beenden">Stopp</button>`
+    : `<button class="mini" data-cimic="start" ${M.busy ? 'disabled' : ''} title="Visuals live auf Mikrofon oder Line-In reagieren lassen (fragt vorher um Erlaubnis; nichts wird aufgenommen). Beim Export gilt wieder der Track.">🎙 Live-Eingang</button>`;
+  w.classList.toggle('on', M.on);
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-cimic]'); if (!b) return; if (b.dataset.cimic === 'start') ciMicStart(); else ciMicStop(); });
+document.addEventListener('input', e => { if (e.target.matches && e.target.matches('[data-cimicgain]')) { CI.mic.gainV = +e.target.value; if (CI.mic.gain) CI.mic.gain.gain.value = CI.mic.gainV; } });
+const _ciOpenMS = openMediaStudio; openMediaStudio = function (...a) { const r = _ciOpenMS.apply(this, a); requestAnimationFrame(ciMicUI); return r; };
+
+/* ── 4. Neue Visualizer ── */
+const CI_VIZ = new Set(['spiral', 'interfere', 'topo', 'fractaltree', 'kinetic', 'terrain3d', 'lissajous', 'orbitals', 'tunnel3d', 'sphere3d']);
+VIZ_STYLES.push(['spiral', 'Frequenz-Spirale'], ['interfere', 'Interferenz'], ['topo', 'Topografie'], ['fractaltree', 'Fraktal-Baum'], ['kinetic', 'Kinetisches Feld'],
+  ['terrain3d', '3D-Landschaft'], ['lissajous', 'Stereo-Lissajous'], ['orbitals', 'Orbitale'], ['tunnel3d', '3D-Tunnel'], ['sphere3d', 'Partikel-Kugel']);
+/* Spektrum k Analyse-Bilder vor dem aktuellen (Track oder Live-Puffer) */
+function ciHist(f, k) {
+  if (!f) return null;
+  if (f.live) { const H = CI.mic.hist; return H.length ? H[Math.max(0, H.length - 1 - k)] : f.bands; }
+  const fx = f.a && f.a.fx; if (!fx || !k) return f.bands;
+  const i = clamp(Math.round(f.ta * FX_RATE) - k, 0, fx.frames - 1); return fx.bands.subarray(i * FX_BANDS, (i + 1) * FX_BANDS);
+}
+function msDrawVizCI(x, c, t) {
+  const st = c.style, box = msVizBox(c), n = clamp(Math.round(c.bars || 48), 8, 128), sens = c.sens != null ? c.sens : 1, f = msFxAt(t);
+  const [lo, hi] = VIZ_RANGES[c.range || 'full'] || VIZ_RANGES.full;
+  const bandAt = (arr, u) => { if (!arr) return 0.04; if (c.mirrorX) u = 1 - Math.abs(u * 2 - 1); const p = lo + clamp(u, 0, 1) * (hi - lo - 1), i0 = Math.floor(p), i1 = Math.min(i0 + 1, FX_BANDS - 1), w = p - i0; return clamp((arr[i0] * (1 - w) + arr[i1] * w) * sens, 0, 1.4); };
+  const val = u => bandAt(f && f.bands, u);
+  const c1 = c.color || '#ffffff', c2 = c.color2 || c1, A = hexToRgb(c1), Bc = hexToRgb(c2);
+  const mix = (k, a = 1) => { k = clamp(k, 0, 1); return `rgba(${Math.round(A.r + (Bc.r - A.r) * k)},${Math.round(A.g + (Bc.g - A.g) * k)},${Math.round(A.b + (Bc.b - A.b) * k)},${a})`; };
+  const kick = f ? (f.kick != null ? f.kick : f.bass) : 0, bass = f ? f.bass : 0, mid = f ? (f.mid || 0) : 0, hat = f ? (f.hat != null ? f.hat : f.high) : 0;
+  const thick = (c.thick || 1) * Math.max(1, Math.min(MS.w, MS.h) / 540), W = box.w, H = box.h, R = Math.min(W, H) / 2;
+  x.lineCap = 'round'; x.lineJoin = 'round';
+  if (c.glow) { x.shadowColor = c2; x.shadowBlur = Math.min(MS.w, MS.h) * 0.03 * (c.glowAmt != null ? c.glowAmt : 0.6); }
+  if (st === 'spiral') {
+    const turns = 3 + (c.gap != null ? c.gap : 0.4) * 4, N = n * 4, rot = t * 0.18;
+    x.lineWidth = 2 * thick; let prev = null;
+    for (let i = 0; i <= N; i++) { const u = i / N, a = u * turns * Math.PI * 2 + rot, v = val(u), r = R * (0.1 + 0.78 * u) + v * R * 0.16, px = Math.cos(a) * r, py = Math.sin(a) * r;
+      if (prev) { x.strokeStyle = mix(u, 0.35 + 0.65 * Math.min(1, v + 0.2)); x.beginPath(); x.moveTo(prev[0], prev[1]); x.lineTo(px, py); x.stroke(); }
+      if (i % 4 === 0 && v > 0.55) { x.fillStyle = mix(u); x.beginPath(); x.arc(px, py, thick * (1.5 + v * 3), 0, Math.PI * 2); x.fill(); }
+      prev = [px, py]; }
+  } else if (st === 'interfere') {
+    const L = msLayer(11, Math.max(2, Math.ceil(W)), Math.max(2, Math.ceil(H))), lx = L.getContext('2d'); lx.setTransform(1, 0, 0, 1, 0, 0); lx.clearRect(0, 0, L.width, L.height); lx.translate(L.width / 2, L.height / 2);
+    const fam = 3, gap = R * (0.075 - 0.03 * bass), lw = gap * (0.32 + 0.25 * kick);
+    lx.globalCompositeOperation = 'xor'; lx.lineWidth = lw;
+    for (let j = 0; j < fam; j++) { const a = t * (0.21 + j * 0.07) + j * 2.09, d = R * (0.18 + 0.12 * Math.sin(t * 0.3 + j) + 0.15 * val(j / fam)), cx = Math.cos(a) * d, cy = Math.sin(a) * d;
+      lx.strokeStyle = j === 1 ? c2 : c1; for (let r = gap * 0.5 + ((t * 18 * (j % 2 ? 1 : -1)) % gap + gap) % gap; r < R * 1.5; r += gap) { lx.beginPath(); lx.arc(cx, cy, r, 0, Math.PI * 2); lx.stroke(); } }
+    lx.globalCompositeOperation = 'destination-in'; const g = lx.createRadialGradient(0, 0, R * 0.2, 0, 0, R); g.addColorStop(0, '#000'); g.addColorStop(0.85, 'rgba(0,0,0,.9)'); g.addColorStop(1, 'rgba(0,0,0,0)'); lx.fillStyle = g; lx.fillRect(-R, -R, R * 2, R * 2);
+    lx.globalCompositeOperation = 'source-over'; x.drawImage(L, -W / 2, -H / 2, W, H);
+  } else if (st === 'topo') {
+    // Höhenkarte aus Frequenz (x) und Zeit (y), Höhenlinien per Marching Squares
+    const cols = clamp(Math.round(n / 2), 16, 48), rows = 30, field = new Float32Array(cols * rows);
+    for (let r = 0; r < rows; r++) { const arr = ciHist(f, r * 2); for (let q = 0; q < cols; q++) field[r * cols + q] = bandAt(arr, q / (cols - 1)) * (0.75 + 0.25 * Math.sin(q * 0.4 + r * 0.3)); }
+    const sx = W / (cols - 1), sy = H / (rows - 1), levels = 9, ox = -W / 2, oy = -H / 2;
+    for (let L = 1; L <= levels; L++) { const iso = L / (levels + 1); x.strokeStyle = mix(L / levels, 0.4 + 0.6 * L / levels); x.lineWidth = thick * (L % 3 === 0 ? 2 : 1); x.beginPath();
+      for (let r = 0; r < rows - 1; r++) for (let q = 0; q < cols - 1; q++) {
+        const a = field[r * cols + q], b = field[r * cols + q + 1], d = field[(r + 1) * cols + q], e = field[(r + 1) * cols + q + 1];
+        const id = (a > iso ? 8 : 0) | (b > iso ? 4 : 0) | (e > iso ? 2 : 0) | (d > iso ? 1 : 0); if (id === 0 || id === 15) continue;
+        const X = ox + q * sx, Y = oy + r * sy, lerp = (p, s) => (iso - p) / ((s - p) || 1e-6);
+        const T = [X + sx * lerp(a, b), Y], Rr = [X + sx, Y + sy * lerp(b, e)], Bt = [X + sx * lerp(d, e), Y + sy], Lf = [X, Y + sy * lerp(a, d)];
+        const seg = (p, s) => { x.moveTo(p[0], p[1]); x.lineTo(s[0], s[1]); };
+        switch (id) { case 1: case 14: seg(Lf, Bt); break; case 2: case 13: seg(Bt, Rr); break; case 3: case 12: seg(Lf, Rr); break; case 4: case 11: seg(T, Rr); break;
+          case 5: seg(Lf, T); seg(Bt, Rr); break; case 6: case 9: seg(T, Bt); break; case 7: case 8: seg(Lf, T); break; case 10: seg(T, Rr); seg(Lf, Bt); break; } }
+      x.stroke(); }
+  } else if (st === 'fractaltree') {
+    const depth = clamp(Math.round(n / 14), 5, 9), spread = 0.32 + mid * 0.55, shrink = 0.7 + bass * 0.06, len0 = H * 0.27 * (0.8 + bass * 0.4);
+    const draw = (px, py, a, len, d) => { if (d > depth) { if (hat > 0.25) { x.fillStyle = mix(1, clamp(hat, 0, 1)); x.beginPath(); x.arc(px, py, thick * (1 + hat * 2.5), 0, Math.PI * 2); x.fill(); } return; }
+      const sway = Math.sin(t * 1.3 + d * 0.9) * 0.05 * (0.4 + hat), ex = px + Math.cos(a) * len, ey = py + Math.sin(a) * len;
+      x.strokeStyle = mix(d / depth, 0.55 + 0.45 * (1 - d / depth)); x.lineWidth = Math.max(0.6, thick * (depth - d + 1) * 0.55); x.beginPath(); x.moveTo(px, py); x.lineTo(ex, ey); x.stroke();
+      const vb = val(d / depth) * 0.25; draw(ex, ey, a - spread - vb + sway, len * shrink, d + 1); draw(ex, ey, a + spread + vb + sway, len * shrink, d + 1); };
+    draw(0, H / 2, -Math.PI / 2, len0, 1);
+  } else if (st === 'kinetic') {
+    const cols = clamp(Math.round(n / 2), 10, 40), rows = Math.max(4, Math.round(cols * H / W)), cw = W / cols, ch = H / rows;
+    x.lineWidth = 1.6 * thick;
+    for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) { const u = i / (cols - 1), v = val(u), cx = -W / 2 + (i + 0.5) * cw, cy = -H / 2 + (j + 0.5) * ch;
+      const a = Math.sin(i * 0.31 + t * 0.7) * 1.6 + Math.cos(j * 0.37 - t * 0.5) * 1.6 + v * 2.2 + kick * Math.sin(i + j) * 0.8, L = Math.min(cw, ch) * (0.2 + 0.6 * v);
+      x.strokeStyle = mix(v, 0.3 + 0.7 * v); x.beginPath(); x.moveTo(cx - Math.cos(a) * L, cy - Math.sin(a) * L); x.lineTo(cx + Math.cos(a) * L, cy + Math.sin(a) * L); x.stroke(); }
+  } else if (st === 'terrain3d') {
+    // 3D-Drahtgitter: Spalten = Frequenz, Reihen = Zeit (läuft auf dich zu)
+    const cols = clamp(Math.round(n / 2), 16, 56), rows = 26, amp = H * 0.55, P = [], hor = -H * 0.42;
+    for (let r = 0; r < rows; r++) { const arr = ciHist(f, (rows - 1 - r) * 3), z = 1 + (rows - 1 - r) / (rows - 1) * 3.2, row = [];
+      for (let q = 0; q < cols; q++) { const u = q / (cols - 1), hgt = bandAt(arr, u), wx = (u - 0.5) * 2; row.push([wx * W * 0.62 / z, hor + (H * 0.95 - hgt * amp) / z]); } P.push(row); }
+    x.lineWidth = thick;
+    for (let r = 0; r < rows; r++) { const row = P[r], depth = r / (rows - 1);
+      x.beginPath(); x.moveTo(row[0][0], row[0][1]); for (let q = 1; q < cols; q++) x.lineTo(row[q][0], row[q][1]); const back = row.slice().reverse(); back.forEach(p => x.lineTo(p[0], H / 2)); x.closePath();
+      x.save(); x.shadowBlur = 0; x.fillStyle = 'rgba(0,0,0,0.88)'; x.globalCompositeOperation = 'destination-out'; x.fill(); x.restore();
+      x.strokeStyle = mix(depth, 0.15 + 0.85 * depth); x.beginPath(); x.moveTo(row[0][0], row[0][1]); for (let q = 1; q < cols; q++) x.lineTo(row[q][0], row[q][1]); x.stroke();
+      if (r) { x.strokeStyle = mix(depth, 0.08 + 0.4 * depth); x.beginPath(); for (let q = 0; q < cols; q += 2) { x.moveTo(P[r - 1][q][0], P[r - 1][q][1]); x.lineTo(row[q][0], row[q][1]); } x.stroke(); } }
+  } else if (st === 'lissajous') {
+    const N = 1400; let Ls = null, Rs = null;
+    if (f && f.live && CI.mic.tb) { Ls = CI.mic.tb; Rs = null; }
+    else { const a = f && f.a, buf = a && a.buffer; if (buf) { const sr = buf.sampleRate, i0 = Math.max(0, Math.round(f.ta * sr) - N); Ls = buf.getChannelData(0).subarray(i0, i0 + N); Rs = buf.numberOfChannels > 1 ? buf.getChannelData(1).subarray(i0, i0 + N) : null; } }
+    x.lineWidth = 1.4 * thick; x.strokeStyle = mix(0.3, 0.85);
+    x.beginPath(); const k = R * 1.35 * sens;
+    if (Ls) for (let i = 0; i < Ls.length; i++) { const l = Ls[i], r = Rs ? Rs[i] : (Ls[(i + 37) % Ls.length]), px = (l - r) * 0.7071 * k, py = -(l + r) * 0.7071 * k; i ? x.lineTo(px, py) : x.moveTo(px, py); }
+    else { for (let i = 0; i <= 200; i++) { const a = i / 200 * Math.PI * 2; i ? x.lineTo(Math.sin(a * 3 + t) * R * 0.3, Math.sin(a * 2) * R * 0.3) : x.moveTo(0, 0); } }
+    x.stroke(); x.strokeStyle = mix(1, 0.25); x.lineWidth = thick; x.beginPath(); x.moveTo(-R, 0); x.lineTo(R, 0); x.moveTo(0, -R); x.lineTo(0, R); x.stroke();
+  } else if (st === 'orbitals') {
+    const rings = clamp(Math.round(n / 12), 3, 9);
+    for (let j = 0; j < rings; j++) { const u = (j + 0.5) / rings, v = val(u), rr = R * (0.22 + 0.74 * u) * (1 + v * 0.06), cnt = 3 + j * 2, dir = j % 2 ? -1 : 1, sp = (0.35 + 0.5 / (j + 1)) * dir;
+      x.strokeStyle = mix(u, 0.12 + 0.3 * v); x.lineWidth = thick; x.beginPath(); x.arc(0, 0, rr, 0, Math.PI * 2); x.stroke();
+      for (let q = 0; q < cnt; q++) { const a = t * sp + q / cnt * Math.PI * 2 + j * 0.7 + v * 0.6 * dir, px = Math.cos(a) * rr, py = Math.sin(a) * rr;
+        x.fillStyle = mix(u); x.beginPath(); x.arc(px, py, thick * (1.6 + v * 5), 0, Math.PI * 2); x.fill(); } }
+    x.fillStyle = mix(0, 0.9); x.beginPath(); x.arc(0, 0, R * (0.08 + kick * 0.06), 0, Math.PI * 2); x.fill();
+  } else if (st === 'tunnel3d') {
+    const N = 22, seg = clamp(Math.round(n / 2), 12, 64), spd = 1.2 + bass * 0.6;
+    for (let k = N - 1; k >= 0; k--) { const zz = ((k + (t * spd) % 1)) / N, z = 0.15 + zz * 3, depth = 1 - zz, arr = ciHist(f, Math.round(zz * 45)), rot = t * 0.15 + zz * 1.4;
+      x.strokeStyle = mix(zz, depth * 0.9); x.lineWidth = thick * (0.6 + depth * 2.2); x.beginPath();
+      for (let q = 0; q <= seg; q++) { const u = q / seg, a = u * Math.PI * 2 + rot, v = bandAt(arr, Math.abs(u * 2 - 1)), r = R * 0.55 / z * (1 + v * 0.35); const px = Math.cos(a) * r, py = Math.sin(a) * r; q ? x.lineTo(px, py) : x.moveTo(px, py); }
+      x.stroke(); }
+  } else if (st === 'sphere3d') {
+    const N = clamp(n * 6, 120, 700), ry = t * 0.35, rx = 0.35 + Math.sin(t * 0.21) * 0.25, cy = Math.cos(ry), sy = Math.sin(ry), cx = Math.cos(rx), sx = Math.sin(rx), pts = [];
+    for (let i = 0; i < N; i++) { const yy = 1 - (i + 0.5) / N * 2, rad = Math.sqrt(1 - yy * yy), th = i * 2.39996, u = Math.abs(yy), v = val(1 - u), k = 1 + v * 0.35 + kick * 0.05;
+      let X = Math.cos(th) * rad * k, Y = yy * k, Z = Math.sin(th) * rad * k; const X2 = X * cy + Z * sy, Z2 = -X * sy + Z * cy, Y2 = Y * cx - Z2 * sx, Z3 = Y * sx + Z2 * cx;
+      pts.push([X2, Y2, Z3, v]); }
+    pts.sort((a, b) => a[2] - b[2]);
+    for (const [X, Y, Z, v] of pts) { const p = 2.6 / (2.6 - Z * 0.9), d = (Z + 1) / 2; x.fillStyle = mix(v, 0.15 + 0.85 * d); x.beginPath(); x.arc(X * R * 0.72 * p, Y * R * 0.72 * p, thick * (0.8 + d * 1.8 + v * 2), 0, Math.PI * 2); x.fill(); }
+  }
+  x.shadowBlur = 0;
+}
+const _ciDrawViz = msDrawVisualizer;
+msDrawVisualizer = function (x, c, t) { if (CI_VIZ.has(c.style)) return msDrawVizCI(x, c, t); return _ciDrawViz(x, c, t); };
+const _ciVizBox = msVizBox;
+msVizBox = function (c) {
+  const s = c.scale || 1, m = Math.min(MS.w, MS.h);
+  if (['spiral', 'interfere', 'orbitals', 'tunnel3d', 'sphere3d', 'lissajous'].includes(c.style)) { const d = m * (c.style === 'tunnel3d' ? 1 : 0.8) * s; return { w: d, h: d }; }
+  if (c.style === 'fractaltree') { const d = m * 0.8 * s; return { w: d, h: d }; }
+  if (c.style === 'topo' || c.style === 'kinetic') return { w: MS.w * 0.8 * s, h: MS.h * 0.6 * s };
+  if (c.style === 'terrain3d') return { w: MS.w * 0.95 * s, h: MS.h * 0.62 * s };
+  return _ciVizBox(c);
+};
+VIZ_PRESETS.push(
+  ['Minimal · Spirale', { style: 'spiral', bars: 64, gap: 0.3, glow: false, range: 'full', color: '#ffffff', color2: '#9aa0ae', thick: 1 }],
+  ['Minimal · Orbitale', { style: 'orbitals', bars: 60, glow: false, range: 'full', color: '#ffffff', color2: '#ffffff', thick: 1 }],
+  ['Geometrisch · Interferenz', { style: 'interfere', glow: false, range: 'bass', color: '#ffffff', color2: '#00e5ff', sens: 1 }],
+  ['Geometrisch · Kugel', { style: 'sphere3d', bars: 80, glow: true, glowAmt: 0.4, range: 'full', color: '#5b8cff', color2: '#ffffff' }],
+  ['Organisch · Fraktal-Baum', { style: 'fractaltree', bars: 100, glow: true, glowAmt: 0.4, range: 'full', color: '#7dff6b', color2: '#ffd23f', thick: 1 }],
+  ['Organisch · Spirale', { style: 'spiral', bars: 96, gap: 0.6, glow: true, glowAmt: 0.5, mirrorX: true, color: '#c8ff3d', color2: '#ff2e88' }],
+  ['Industriell · Topografie', { style: 'topo', bars: 80, glow: false, range: 'full', color: '#ff7a1a', color2: '#ffffff', thick: 1 }],
+  ['Industriell · Kinetisch', { style: 'kinetic', bars: 64, glow: false, range: 'full', color: '#9aa0ae', color2: '#ffd23f', thick: 1.2 }],
+  ['Psychedelisch · Tunnel', { style: 'tunnel3d', bars: 64, glow: true, glowAmt: 0.7, range: 'full', mirrorX: true, color: '#ff2e88', color2: '#00e5ff', sens: 1.1 }],
+  ['Psychedelisch · Interferenz', { style: 'interfere', glow: true, glowAmt: 0.5, range: 'full', color: '#ff2e88', color2: '#ffd23f' }],
+  ['Atmosphärisch · Kinetisch', { style: 'kinetic', bars: 40, glow: true, glowAmt: 0.6, range: 'mid', color: '#7b2cbf', color2: '#3dffb0', thick: 0.8 }],
+  ['Atmosphärisch · Landschaft', { style: 'terrain3d', bars: 64, glow: true, glowAmt: 0.4, range: 'full', color: '#3a0ca3', color2: '#4cc9f0', thick: 1 }],
+  ['Futuristisch · Landschaft', { style: 'terrain3d', bars: 96, glow: true, glowAmt: 0.8, range: 'full', mirrorX: true, color: '#ff2e88', color2: '#00e5ff', thick: 1.2 }],
+  ['Futuristisch · Lissajous', { style: 'lissajous', glow: true, glowAmt: 0.8, color: '#00ff9c', color2: '#00ff9c', thick: 1, sens: 1 }],
+  ['Tribal · Orbitale', { style: 'orbitals', bars: 96, glow: false, range: 'full', mirrorX: true, color: '#ffd23f', color2: '#ff3344', thick: 1.6 }],
+  ['Tribal · Fraktal', { style: 'fractaltree', bars: 84, glow: false, range: 'bass', color: '#ffffff', color2: '#ff7a1a', thick: 1.6 }],
+  ['Abstrakt · Topo-Neon', { style: 'topo', bars: 96, glow: true, glowAmt: 0.6, range: 'full', mirrorX: true, color: '#b14dff', color2: '#00e5ff', thick: 1 }],
+  ['Abstrakt · Stereo', { style: 'lissajous', glow: true, glowAmt: 0.5, color: '#ffffff', color2: '#ff2e88', thick: 0.8, sens: 1.3 }],
+  ['Räumlich · Tunnel', { style: 'tunnel3d', bars: 48, glow: false, range: 'full', color: '#ffffff', color2: '#5b8cff', thick: 0.9 }],
+  ['Räumlich · Partikel-Kugel', { style: 'sphere3d', bars: 110, glow: true, glowAmt: 0.6, range: 'full', mirrorX: true, color: '#ffd23f', color2: '#ff2e88' }]);
+
+/* ── 5a. Neue Shader ── */
+Object.assign(GEN_SHADERS, {
+  warp: { name: 'Domain Warp', c: ['#0b0614', '#ff2e88', '#ffd23f'], src: GEN_SN + `void main(){ vec2 p = uv0() * (1.5 + Z * 3.0); float t = T * S * 0.15;
+    vec2 q = vec2(fbm(p + vec2(0.0, t)), fbm(p + vec2(5.2, 1.3 - t)));
+    vec2 r = vec2(fbm(p + (3.0 + 2.0 * I * B) * q + vec2(1.7, 9.2) + t * 0.7), fbm(p + (3.0 + 2.0 * I * B) * q + vec2(8.3, 2.8) - t * 0.6));
+    float v = fbm(p + (3.0 + D * 3.0) * r);
+    vec3 col = mix(C1, C2, clamp(v * v * 3.0, 0.0, 1.0)); col = mix(col, C3, clamp(length(q) * 0.9 - 0.2, 0.0, 1.0) * (0.6 + 0.6 * K * I)); col *= 0.55 + 0.9 * v;
+    gl_FragColor = vec4(mixT(col, p * 0.2 + r * 0.3), 1.0); }` },
+  gyroid: { name: 'Gyroid 3D', c: ['#00e5ff', '#ff2e88', '#05060a'], src: GEN_SN + `float gy(vec3 p){ float sc = 3.0 + D * 5.0; p *= sc; return abs(dot(sin(p), cos(p.yzx))) / sc - (0.03 + 0.05 * B * I); }
+    void main(){ vec2 p = uv0(); vec3 ro = vec3(0.0, 0.0, T * S * 0.35), rd = normalize(vec3(p * (0.8 + Z), 1.0)); rd.xy *= rot(T * 0.05); float d = 0.0, g = 0.0; vec3 q = ro;
+      for (int i = 0; i < 64; i++) { q = ro + rd * d; float h = gy(q); g += 0.012 / (0.02 + abs(h)); if (h < 0.002 || d > 6.0) break; d += h * 0.9; }
+      float f = exp(-d * 0.35); vec3 col = palc(d * 0.12 + T * 0.02) * f * 1.4 + C2 * g * 0.012 * (0.5 + K * I) + C3 * (1.0 - f) * 0.2;
+      gl_FragColor = vec4(mixT(col, q.xy * 0.5), 1.0); }` },
+  topo: { name: 'Höhenlinien', c: ['#05060a', '#3dffb0', '#ff7a1a'], src: GEN_SN + `void main(){ vec2 p = uv0() * (1.6 + Z * 3.0); float t = T * S * 0.08;
+    float h = fbm(p * 1.2 + vec2(t, -t * 0.7)) + 0.35 * fbm(p * 3.1 - t) + 0.25 * B * I * (1.0 - length(p) * 0.4);
+    float n = 10.0 + D * 30.0, v = h * n, l = abs(fract(v) - 0.5), w = 0.03 + 0.04 * H;
+    float line = 1.0 - smoothstep(w, w + 0.05, l), major = (1.0 - smoothstep(w, w + 0.05, abs(fract(v / 5.0) - 0.5) * 5.0)) * step(0.5, line);
+    vec3 col = mix(C1, C1 + C2 * 0.12, h); col += C2 * line * (0.45 + 0.4 * I * M) + C3 * major * (0.6 + K * I);
+    gl_FragColor = vec4(mixT(col, gl_FragCoord.xy / R), 1.0); }` },
+  reaction: { name: 'Reaktion', c: ['#f5f1e8', '#141018', '#ff2e88'], src: GEN_SN + `void main(){ vec2 p = uv0() * (3.0 + Z * 8.0); float t = T * S * 0.1;
+    vec2 w = p; for (int i = 0; i < 4; i++) { float fi = float(i); w += 0.6 * vec2(sin(w.y * 1.3 + t + fi), cos(w.x * 1.1 - t * 0.8 + fi * 1.7)) * (0.6 + 0.3 * D); }
+    float v = sin(w.x * 2.0) * cos(w.y * 2.0) + 0.5 * fbm(w * 0.7) + 0.3 * B * I;
+    float s = smoothstep(-0.06, 0.06, v - 0.15 * sin(t * 2.0)); float edge = 1.0 - smoothstep(0.0, 0.12, abs(v - 0.15 * sin(t * 2.0)));
+    vec3 col = mix(C1, C2, s) + C3 * edge * (0.25 + 0.75 * K * I);
+    gl_FragColor = vec4(mixT(col, w * 0.1), 1.0); }` },
+  voronoi: { name: 'Voronoi-Kanten', c: ['#0a0d18', '#00e5ff', '#ff2e88'], src: GEN_SN + `vec2 h2(vec2 p){ return fract(sin(vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3))) + SEED) * 43758.5453); }
+    void main(){ vec2 p = uv0() * (3.0 + Z * 9.0); vec2 i = floor(p), f = fract(p); float d1 = 8.0, d2 = 8.0; vec2 id = vec2(0.0);
+      for (int y = -1; y <= 1; y++) for (int x = -1; x <= 1; x++) { vec2 g = vec2(float(x), float(y)), o = h2(i + g); o = 0.5 + 0.45 * sin(T * S * 0.6 + 6.2831 * o + B * I * 1.5);
+        float d = length(g + o - f); if (d < d1) { d2 = d1; d1 = d; id = i + g; } else if (d < d2) d2 = d; }
+      float e = d2 - d1, lit = step(1.0 - 0.6 * I * (K + 0.3 * HT), hash(id + floor(T * 2.0)));
+      vec3 col = C1 + palc(hash(id) * 0.6 + T * 0.02) * (0.08 + 0.5 * lit) * (1.0 - d1); col += C2 * (1.0 - smoothstep(0.0, 0.04 + 0.06 * D, e)) * (0.6 + 0.8 * M * I);
+      gl_FragColor = vec4(mixT(col, gl_FragCoord.xy / R), 1.0); }` },
+  silk: { name: 'Seide', c: ['#ffd23f', '#ff2e88', '#120a1f'], src: GEN_SN + `void main(){ vec2 p = uv0() * (2.0 + Z * 3.0); float t = T * S * 0.3;
+    for (int i = 1; i < 8; i++) { float fi = float(i); p += vec2(0.6 / fi * sin(fi * p.y + t + 0.3 * fi) + 0.8, 0.4 / fi * sin(fi * p.x + t * 1.1 + 0.3 * fi) - 0.8) * (0.7 + 0.5 * D + 0.4 * B * I); }
+    float v = 0.5 + 0.5 * sin(p.x + p.y), w = 0.5 + 0.5 * cos(p.y * 1.3);
+    vec3 col = mix(C3, palc(v * 0.6 + t * 0.05), smoothstep(0.1, 0.9, v)) * (0.7 + 0.6 * w) + C1 * pow(v, 12.0) * (0.3 + K * I);
+    gl_FragColor = vec4(mixT(col, p * 0.05), 1.0); }` },
+});
+VISUAL_PRESETS.push(
+  { name: 'Warp Bloom', gen: 'warp', cols: ['#0b0614', '#ff2e88', '#ffd23f'], viz: 'spiral', fx: [['bloom', 0.4, true], ['grain', 0.2]], text: 'rise' },
+  { name: 'Gyroid Drive', gen: 'gyroid', cols: ['#00e5ff', '#ff2e88', '#05060a'], viz: 'tunnel3d', fx: [['chroma', 0.35, true], ['vignette', 0.45]], text: 'glitch' },
+  { name: 'Contour Map', gen: 'topo', cols: ['#05060a', '#3dffb0', '#ff7a1a'], viz: 'topo', vizCols: ['#3dffb0', '#ffffff'], fx: [['grain', 0.25]], text: 'rise' },
+  { name: 'Silk Orbit', gen: 'silk', cols: ['#ffd23f', '#ff2e88', '#120a1f'], viz: 'orbitals', fx: [['godrays', 0.35, true], ['vignette', 0.4]], text: 'flicker' });
+
+/* ── 5b. Neue Video-Effekte ── */
+['chroma', 'dirblur', 'godrays', 'displace'].forEach(k => MS_VFX_NEW.add(k));
+MS_VFX.push(['chroma', 'Chromatische Aberration'], ['dirblur', 'Bewegungsunschärfe'], ['godrays', 'Lichtstrahlen'], ['displace', 'Verzerren 2D']);
+['chroma', 'godrays', 'displace'].forEach(k => MS_VFX_BEAT.add(k));
+const _ciVfxNew = msApplyVfxNew;
+msApplyVfxNew = function (L, list, t) {
+  const mine = list.filter(e => ['chroma', 'dirblur', 'godrays', 'displace'].includes(e.type)), rest = list.filter(e => !mine.includes(e));
+  if (rest.length) _ciVfxNew(L, rest, t); if (!mine.length) return;
+  const W = L.width, H = L.height, lx = L.getContext('2d'), f = msFxAt(t), Tm = msLayer(8, W, H), tx = Tm.getContext('2d'), U = msLayer(12, W, H), ux = U.getContext('2d');
+  const snap = () => { tx.setTransform(1, 0, 0, 1, 0, 0); tx.globalAlpha = 1; tx.globalCompositeOperation = 'copy'; tx.drawImage(L, 0, 0); tx.globalCompositeOperation = 'source-over'; };
+  lx.save(); lx.setTransform(1, 0, 0, 1, 0, 0);
+  for (const e of mine) {
+    const drive = e.beat ? (f ? (f.kick != null ? f.kick : f.bass) : 0) : 1, k = clamp(e.amt != null ? e.amt : 0.5, 0, 1) * drive; if (k <= 0.005) continue;
+    if (e.type === 'chroma') { snap(); lx.clearRect(0, 0, W, H); lx.globalCompositeOperation = 'lighter';
+      [['#ff0000', 1 + k * 0.03], ['#00ff00', 1], ['#0000ff', 1 - k * 0.03]].forEach(([col, s]) => {
+        ux.setTransform(1, 0, 0, 1, 0, 0); ux.globalCompositeOperation = 'copy'; ux.translate(W / 2, H / 2); ux.scale(s, s); ux.drawImage(Tm, -W / 2, -H / 2); ux.setTransform(1, 0, 0, 1, 0, 0);
+        ux.globalCompositeOperation = 'multiply'; ux.fillStyle = col; ux.fillRect(0, 0, W, H); ux.globalCompositeOperation = 'destination-in'; ux.translate(W / 2, H / 2); ux.scale(s, s); ux.drawImage(Tm, -W / 2, -H / 2); ux.setTransform(1, 0, 0, 1, 0, 0);
+        lx.drawImage(U, 0, 0); });
+      lx.globalCompositeOperation = 'source-over'; }
+    else if (e.type === 'dirblur') { snap(); const N = 9, ang = (+e.angle || 0) * Math.PI / 180, len = k * Math.max(W, H) * 0.04; lx.clearRect(0, 0, W, H);
+      for (let j = 0; j < N; j++) { const o = (j / (N - 1) - 0.5) * len; lx.globalAlpha = 1 / (j + 1); lx.drawImage(Tm, Math.cos(ang) * o, Math.sin(ang) * o); } lx.globalAlpha = 1; }
+    else if (e.type === 'godrays') { snap(); ux.setTransform(1, 0, 0, 1, 0, 0); ux.globalCompositeOperation = 'copy'; ux.filter = 'brightness(0.9) contrast(3) saturate(1.3)'; ux.drawImage(Tm, 0, 0); ux.filter = 'none';
+      lx.globalCompositeOperation = 'lighter'; const cx = W * (e.cx != null ? e.cx : 0.5), cy = H * (e.cy != null ? e.cy : 0.35);
+      for (let j = 1; j <= 10; j++) { const s = 1 + j * k * 0.035; lx.globalAlpha = 0.11 * k * (1 - j / 11); lx.setTransform(s, 0, 0, s, cx * (1 - s), cy * (1 - s)); lx.drawImage(U, 0, 0); }
+      lx.setTransform(1, 0, 0, 1, 0, 0); lx.globalAlpha = 1; lx.globalCompositeOperation = 'source-over'; }
+    else if (e.type === 'displace') { snap(); const sh = Math.max(2, Math.round(H / 160)), sw = Math.max(2, Math.round(W / 160));
+      ux.setTransform(1, 0, 0, 1, 0, 0); ux.globalCompositeOperation = 'copy'; ux.drawImage(Tm, 0, 0); ux.globalCompositeOperation = 'source-over'; ux.clearRect(0, 0, W, H);
+      for (let y = 0; y < H; y += sh) ux.drawImage(Tm, 0, y, W, sh, Math.sin(y / H * 11 + t * 3.1) * k * W * 0.025, y, W, sh);
+      lx.clearRect(0, 0, W, H); for (let xx = 0; xx < W; xx += sw) lx.drawImage(U, xx, 0, sw, H, xx, Math.cos(xx / W * 9 - t * 2.7) * k * H * 0.025, sw, H); }
+  }
+  lx.restore();
+};
+
+/* ── Befehlspalette: Visualizer, Shader, Effekte und Presets direkt finden ── */
+function ciEnsureVideo() { if (!MS.open) openMediaStudio(); }
+VIZ_STYLES.forEach(([k, l]) => CMD_ACTIONS.push({ label: 'Visualizer: ' + l, key: '', tag: 'viz', run: () => { ciEnsureVideo(); setTimeout(() => { msAddVisualizer(); const c = msSelClip(); if (c && c.type === 'visualizer') { c.style = k; msSnap(); msBuildInspector(); msRender(); } }, 120); } }));
+Object.entries(GEN_SHADERS).forEach(([k, d]) => CMD_ACTIONS.push({ label: 'Generator: ' + d.name, key: '', tag: 'gen', run: () => { ciEnsureVideo(); setTimeout(() => { msAddGen(k); msBuildInspector(); msRender(); }, 120); } }));
+VIZ_PRESETS.forEach(([n, P]) => CMD_ACTIONS.push({ label: 'Visualizer-Preset: ' + n, key: '', tag: 'preset', run: () => { ciEnsureVideo(); setTimeout(() => { msAddVisualizer(); const c = msSelClip(); if (c && c.type === 'visualizer') { Object.assign(c, P); msSnap(); msBuildInspector(); msRender(); } }, 120); } }));
+CMD_ACTIONS.push({ label: 'Live-Eingang (Mikrofon) starten/beenden', key: '', run: () => { ciEnsureVideo(); CI.mic.on ? ciMicStop() : ciMicStart(); } });
+
+/* ═════════ Claud.io 1.1 · Arbeitsbereiche, Darstellungs-Profile, Favoriten ═════════ */
+/* Panel-Breiten als CSS-Variablen; Griffe zum Ziehen (Doppelklick = ein-/ausklappen) */
+const WS_VARS = { lp: ['--ws-lp', 248, 0, 480], rp: ['--ws-rp', 272, 200, 520], msl: ['--ws-msl', 260, 0, 460], msi: ['--ws-msi', 290, 220, 560], tl: ['--ws-tl', 0, 140, 900] };
+const WS_PRESETS = [
+  { id: 'design', name: 'Design', mode: 'design', v: { lp: 248, rp: 272, msl: 260, msi: 290, tl: 0 }, hide: [] },
+  { id: 'video', name: 'Video', mode: 'video', v: { lp: 248, rp: 272, msl: 230, msi: 300, tl: 330 }, hide: [] },
+  { id: 'audio', name: 'Audio & Visualizer', mode: 'video', v: { lp: 248, rp: 272, msl: 220, msi: 360, tl: 260 }, hide: [] },
+  { id: 'd3', name: '3D', mode: 'design', v: { lp: 300, rp: 300, msl: 260, msi: 320, tl: 0 }, hide: [], open3d: true },
+  { id: 'minimal', name: 'Minimal', mode: null, v: { lp: 0, rp: 240, msl: 0, msi: 260, tl: 200 }, hide: ['lp', 'msl'] },
+  { id: 'advanced', name: 'Erweitert', mode: null, v: { lp: 300, rp: 330, msl: 290, msi: 380, tl: 360 }, hide: [] },
+];
+function wsState() { return (UI.ws = UI.ws || { cur: 'design', custom: [], v: null, hide: [] }); }
+function wsAll() { return WS_PRESETS.concat(wsState().custom || []); }
+function wsApplyVars() {
+  const S = wsState(), d = document.documentElement, base = (wsAll().find(w => w.id === S.cur) || WS_PRESETS[0]), v = { ...base.v, ...(S.v || {}) }, hide = S.hide || base.hide || [];
+  Object.entries(WS_VARS).forEach(([k, [name]]) => { if (k === 'tl' && !v.tl) d.style.removeProperty(name); else d.style.setProperty(name, (hide.includes(k) ? 0 : v[k]) + 'px'); });
+  d.dataset.wsHide = hide.join(' '); d.dataset.ws = S.cur;
+  window.dispatchEvent(new Event('resize'));
+}
+function wsSwitch(id, opt = {}) {
+  const S = wsState(), w = wsAll().find(x => x.id === id); if (!w) return;
+  S.cur = id; S.v = null; S.hide = (w.hide || []).slice(); saveUI(); wsApplyVars();
+  if (!opt.keepMode) { if (w.mode === 'video' && !MS.open) openMediaStudio(); else if (w.mode === 'design' && MS.open) closeMediaStudio(); if (w.open3d && typeof d3Open === 'function' && !opt.silent) d3Open('text'); }
+  buildUiPop(); if (!opt.silent) toast(`Arbeitsbereich: ${esc(T(w.name))}`, 'ok', 1400);
+}
+function wsMountGrips() {
+  const spots = [['#leftpanel', 'lp', 'right'], ['.rightpanel', 'rp', 'left'], ['.ms-lib', 'msl', 'right'], ['#msInspector', 'msi', 'left'], ['.ms-tl', 'tl', 'top']];
+  spots.forEach(([sel, k, side]) => { const el = document.querySelector(sel); if (!el || el.querySelector(':scope > .ws-grip')) return;
+    const g = document.createElement('div'); g.className = 'ws-grip ws-' + side; g.dataset.ws = k; g.title = 'Ziehen: Breite ändern · Doppelklick: ein-/ausklappen'; g.setAttribute('role', 'separator'); g.setAttribute('aria-orientation', side === 'top' ? 'horizontal' : 'vertical'); g.tabIndex = 0;
+    if (getComputedStyle(el).position === 'static') el.style.position = 'relative'; el.appendChild(g); });
+  // eingeklappte Panels: schmale Leiste zum Wiederöffnen
+  [['lp', '.app', 'Linkes Panel einblenden'], ['msl', '.ms', 'Bibliothek einblenden']].forEach(([k, host, label]) => { const h = document.querySelector(host); if (!h || h.querySelector(':scope > .ws-reopen[data-ws="' + k + '"]')) return;
+    const b = document.createElement('button'); b.className = 'ws-reopen'; b.dataset.ws = k; b.dataset.wsreopen = k; b.title = label; b.setAttribute('aria-label', label); b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>'; h.appendChild(b); });
+}
+function wsToggle(k) { const S = wsState(); S.hide = S.hide || []; const i = S.hide.indexOf(k); if (i >= 0) S.hide.splice(i, 1); else S.hide.push(k); saveUI(); wsApplyVars(); }
+(() => {
+  let drag = null;
+  document.addEventListener('pointerdown', e => { const g = e.target.closest('.ws-grip'); if (!g) return; e.preventDefault(); const k = g.dataset.ws, S = wsState(), cur = (wsAll().find(w => w.id === S.cur) || WS_PRESETS[0]);
+    const panel = g.parentElement, r = panel.getBoundingClientRect(); drag = { k, side: g.classList.contains('ws-left') ? 'left' : g.classList.contains('ws-top') ? 'top' : 'right', x: e.clientX, y: e.clientY, w0: k === 'tl' ? r.height : r.width, g };
+    g.setPointerCapture(e.pointerId); g.classList.add('drag'); document.documentElement.classList.add('ws-dragging'); S.v = S.v || { ...cur.v }; });
+  document.addEventListener('pointermove', e => { if (!drag) return; const [name, , mn, mx] = WS_VARS[drag.k], S = wsState();
+    const d = drag.side === 'right' ? e.clientX - drag.x : drag.side === 'left' ? drag.x - e.clientX : drag.y - e.clientY, w = clamp(Math.round(drag.w0 + d), Math.max(mn, drag.k === 'lp' || drag.k === 'msl' ? 160 : mn), mx);
+    S.v[drag.k] = w; if (S.hide) S.hide = S.hide.filter(x => x !== drag.k); document.documentElement.style.setProperty(name, w + 'px'); document.documentElement.dataset.wsHide = (S.hide || []).join(' '); });
+  const end = () => { if (!drag) return; drag.g.classList.remove('drag'); document.documentElement.classList.remove('ws-dragging'); drag = null; saveUI(); window.dispatchEvent(new Event('resize')); };
+  document.addEventListener('pointerup', end); document.addEventListener('pointercancel', end);
+  document.addEventListener('dblclick', e => { const g = e.target.closest('.ws-grip'); if (g && g.dataset.ws !== 'tl' && g.dataset.ws !== 'rp' && g.dataset.ws !== 'msi') wsToggle(g.dataset.ws); });
+  document.addEventListener('keydown', e => { const g = e.target.closest && e.target.closest('.ws-grip'); if (!g || !['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Enter'].includes(e.key)) return; e.preventDefault();
+    const k = g.dataset.ws, S = wsState(), cur = (wsAll().find(w => w.id === S.cur) || WS_PRESETS[0]); if (e.key === 'Enter') { if (k === 'lp' || k === 'msl') wsToggle(k); return; }
+    S.v = S.v || { ...cur.v }; const [name, , mn, mx] = WS_VARS[k], side = g.classList.contains('ws-left') ? -1 : 1, base = S.v[k] || (k === 'tl' ? g.parentElement.getBoundingClientRect().height : g.parentElement.getBoundingClientRect().width);
+    const dir = (e.key === 'ArrowRight' || e.key === 'ArrowUp') ? 1 : -1; S.v[k] = clamp(Math.round(base + dir * side * 16 * (k === 'tl' ? -side : 1)), mn, mx); document.documentElement.style.setProperty(name, S.v[k] + 'px'); saveUI(); });
+  document.addEventListener('click', e => { const b = e.target.closest('[data-wsreopen]'); if (b) wsToggle(b.dataset.wsreopen); });
+})();
+function wsPanelHTML() {
+  const S = wsState(), all = wsAll(), cur = all.find(w => w.id === S.cur) || WS_PRESETS[0], custom = !WS_PRESETS.some(w => w.id === cur.id);
+  return `<label class="lbl">Arbeitsbereich</label>
+    <div class="ws-list">${all.map(w => `<button class="ws-chip ${w.id === S.cur ? 'on' : ''}" data-ciws="${esc(w.id)}" title="${WS_PRESETS.includes(w) ? 'Vorlage' : 'Eigener Arbeitsbereich'}">${esc(w.name)}</button>`).join('')}</div>
+    <div class="ws-row"><input type="text" id="wsName" placeholder="${custom ? esc(cur.name) : 'Name für eigenen Bereich'}" maxlength="32" aria-label="Name des Arbeitsbereichs">
+      <button class="mini" data-ciwsact="save" title="Aktuelle Panel-Breiten als neuen Arbeitsbereich speichern">Speichern</button></div>
+    <div class="ws-row">${custom ? '<button class="mini" data-ciwsact="rename">Umbenennen</button>' : ''}<button class="mini" data-ciwsact="dup">Duplizieren</button><button class="mini" data-ciwsact="reset" title="Panel-Breiten dieses Bereichs zurücksetzen">Zurücksetzen</button>${custom ? '<button class="mini danger" data-ciwsact="del">Löschen</button>' : ''}</div>
+    <p class="hint-txt">Panel-Ränder lassen sich ziehen, Doppelklick klappt die linke Seite ein.</p>`;
+}
+function wsAction(act) {
+  const S = wsState(), all = wsAll(), cur = all.find(w => w.id === S.cur) || WS_PRESETS[0], nameIn = document.getElementById('wsName'), name = (nameIn && nameIn.value.trim()) || '';
+  const snapshot = () => ({ ...cur.v, ...(S.v || {}) });
+  if (act === 'save' || act === 'dup') { const id = 'c' + Date.now().toString(36); S.custom = S.custom || [];
+    S.custom.push({ id, name: name || (act === 'dup' ? T(cur.name) + ' 2' : 'Mein Bereich ' + (S.custom.length + 1)), mode: MS.open ? 'video' : 'design', v: snapshot(), hide: (S.hide || []).slice() }); S.cur = id; S.v = null; }
+  else if (act === 'rename') { const w = (S.custom || []).find(x => x.id === S.cur); if (w && name) w.name = name; }
+  else if (act === 'reset') { S.v = null; S.hide = (cur.hide || []).slice(); }
+  else if (act === 'del') { S.custom = (S.custom || []).filter(x => x.id !== S.cur); S.cur = 'design'; S.v = null; S.hide = []; }
+  else return;
+  // eigene Bereiche: Änderungen direkt im Bereich speichern
+  saveUI(); wsApplyVars(); buildUiPop();
+}
+window.addEventListener('beforeunload', () => { const S = wsState(), w = (S.custom || []).find(x => x.id === S.cur); if (w && S.v) { w.v = { ...w.v, ...S.v }; w.hide = (S.hide || []).slice(); saveUI(); } });
+
+/* ── Darstellungs-Profile (komplette Einstellungen sichern/laden) ── */
+const AP_KEYS = ['theme', 'accent', 'accent2', 'onAccent', 'texture', 'ptex', 'motion', 'density', 'contrast', 'uiscale'];
+const AP_BUILTIN = [
+  { name: 'Dark Studio', ui: { theme: 'dark', accent: '#6c5ce7', accent2: '#00d2a8', texture: 'dots', ptex: 'glass', motion: 'auto', density: 'comfortable', contrast: 'normal' } },
+  { name: 'Soft Night', ui: { theme: 'eye', accent: '#e3b22b', accent2: '#5b8cff', texture: 'grain', ptex: 'smooth', motion: 'subtle', density: 'comfortable', contrast: 'normal' } },
+  { name: 'Hoher Kontrast', ui: { theme: 'dark', accent: '#ffd23f', accent2: '#00e5ff', texture: 'none', ptex: 'smooth', motion: 'reduced', density: 'spacious', contrast: 'high' } },
+  { name: 'Minimal', ui: { theme: 'light', accent: '#111318', accent2: '#5b8cff', texture: 'none', ptex: 'smooth', motion: 'subtle', density: 'compact', contrast: 'normal' } },
+];
+function apApply(ui) {
+  const d = document.documentElement; AP_KEYS.forEach(k => { if (ui[k] != null) UI[k] = ui[k]; }); saveUI();
+  ['texture', 'ptex', 'motion', 'density', 'contrast'].forEach(k => { if (UI[k]) d.dataset[k] = UI[k]; });
+  if (ui.accent) setAccent(ui.accent, ui.accent2); ciApplyScale(UI.uiscale || 1); setTheme(UI.theme || 'dark'); buildUiPop();
+}
+function apCurrent() { const d = document.documentElement, o = {}; AP_KEYS.forEach(k => { o[k] = UI[k] != null ? UI[k] : d.dataset[k]; }); o.texture = d.dataset.texture; o.ptex = d.dataset.ptex; o.motion = d.dataset.motion; o.density = d.dataset.density; o.contrast = d.dataset.contrast; return o; }
+function apPanelHTML() {
+  const mine = UI.apProfiles || [];
+  return `<label class="lbl">Profile</label><div class="ws-list">${AP_BUILTIN.map((p, i) => `<button class="ws-chip" data-ciap="b${i}">${esc(p.name)}</button>`).join('')}${mine.map((p, i) => `<span class="ws-chip-wrap"><button class="ws-chip mine" data-ciap="u${i}">${esc(p.name)}</button><button class="ws-chip-x" data-ciapdel="${i}" title="Profil löschen" aria-label="Profil löschen">✕</button></span>`).join('')}</div>
+    <div class="ws-row"><input type="text" id="apName" placeholder="Name für dein Profil" maxlength="32" aria-label="Name für dein Profil"><button class="mini" data-ciapsave>Aktuelles sichern</button></div>`;
+}
+/* ── UI-Skalierung: im Desktop über den Zoom des Fensters, im Browser über CSS-Zoom ── */
+function ciApplyScale(k) {
+  k = clamp(+k || 1, 0.75, 1.5); UI.uiscale = k;
+  if (window.claudio && window.claudio.setZoom) { window.claudio.setZoom(k); document.documentElement.style.removeProperty('zoom'); }
+  else if (k !== 1) document.documentElement.style.zoom = k; else document.documentElement.style.removeProperty('zoom');
+}
+document.addEventListener('click', e => {
+  const w = e.target.closest('[data-ciws]'); if (w) { wsSwitch(w.dataset.ciws); return; }
+  const wa = e.target.closest('[data-ciwsact]'); if (wa) { wsAction(wa.dataset.ciwsact); return; }
+  const ap = e.target.closest('[data-ciap]'); if (ap) { const id = ap.dataset.ciap, P = id[0] === 'b' ? AP_BUILTIN[+id.slice(1)] : (UI.apProfiles || [])[+id.slice(1)]; if (P) { apApply(P.ui); toast(`Profil „${esc(T(P.name))}“ angewendet.`, 'ok', 1500); } return; }
+  const apd = e.target.closest('[data-ciapdel]'); if (apd) { (UI.apProfiles || []).splice(+apd.dataset.ciapdel, 1); saveUI(); buildUiPop(); return; }
+  if (e.target.closest('[data-ciapsave]')) { const n = (document.getElementById('apName') || {}).value || ''; UI.apProfiles = UI.apProfiles || []; UI.apProfiles.push({ name: n.trim() || 'Profil ' + (UI.apProfiles.length + 1), ui: apCurrent() }); saveUI(); buildUiPop(); toast('Darstellungs-Profil gesichert.', 'ok', 1500); return; }
+}, true);
+
+/* ── Befehlspalette: Favoriten (☆) und Bereiche ── */
+const CMD_FAV_KEY = 'claudio_cmd_favs_v1';
+let CMD_FAVS = (() => { try { return new Set(JSON.parse(localStorage.getItem(CMD_FAV_KEY) || '[]')); } catch (e) { return new Set(); } })();
+function cmdFavSave() { try { localStorage.setItem(CMD_FAV_KEY, JSON.stringify([...CMD_FAVS])); } catch (e) {} }
+WS_PRESETS.forEach(w => CMD_ACTIONS.push({ label: 'Arbeitsbereich: ' + w.name, key: '', tag: 'ws', run: () => wsSwitch(w.id) }));
+AP_BUILTIN.forEach(p => CMD_ACTIONS.push({ label: 'Darstellung: ' + p.name, key: '', tag: 'ap', run: () => apApply(p.ui) }));
+CMD_ACTIONS.push({ label: 'Linkes Panel ein-/ausklappen', key: '', run: () => wsToggle(MS.open ? 'msl' : 'lp') });
+renderCmdList = function (q) {
+  const ql = q.trim().toLowerCase(), words = ql.split(/\s+/).filter(Boolean);
+  const hay = a => (a.label + ' ' + (typeof T === 'function' ? T(a.label) : '') + ' ' + (a.tag || '')).toLowerCase();
+  let list = words.length ? CMD_ACTIONS.filter(a => { const h = hay(a); return words.every(w => h.includes(w)); }) : CMD_ACTIONS.filter(a => !a.tag || CMD_FAVS.has(a.label));
+  list = list.slice().sort((a, b) => (CMD_FAVS.has(b.label) ? 1 : 0) - (CMD_FAVS.has(a.label) ? 1 : 0));
+  if (words.length) list = list.slice(0, 80);
+  cmdFiltered = list; if (cmdIdx >= cmdFiltered.length) cmdIdx = 0;
+  const el = $('#cmdList');
+  if (!cmdFiltered.length) { el.innerHTML = '<div class="cmdp-empty">Kein passender Befehl.</div>'; try { anrcyMood('confused', 1600); } catch (e) {} return; }
+  el.innerHTML = cmdFiltered.map((a, i) => { const fav = CMD_FAVS.has(a.label);
+    return `<div class="cmdp-item ${i === cmdIdx ? 'on' : ''}" data-i="${i}" role="option" aria-selected="${i === cmdIdx}"><button class="cmdp-fav ${fav ? 'on' : ''}" data-fav="${i}" title="${fav ? 'Aus Favoriten entfernen' : 'Als Favorit oben anheften'}" aria-label="${fav ? 'Aus Favoriten entfernen' : 'Als Favorit oben anheften'}">${fav ? '★' : '☆'}</button><span>${esc(a.label)}</span>${a.key ? `<span class="ci-key">${a.key}</span>` : ''}</div>`; }).join('');
+  el.querySelectorAll('.cmdp-item').forEach(it => {
+    it.addEventListener('mouseenter', () => { cmdIdx = +it.dataset.i; updateCmdActive(); });
+    it.addEventListener('click', e => { const fb = e.target.closest('[data-fav]'); if (fb) { e.stopPropagation(); const a = cmdFiltered[+fb.dataset.fav]; CMD_FAVS.has(a.label) ? CMD_FAVS.delete(a.label) : CMD_FAVS.add(a.label); cmdFavSave(); renderCmdList(($('#cmdInput') || {}).value || q); return; } runCmd(+it.dataset.i); });
+  });
+};
+
+/* ── Start: Arbeitsbereich und Darstellung anwenden ── */
+(() => {
+  const d = document.documentElement; d.dataset.density = UI.density || d.dataset.density || 'comfortable'; d.dataset.contrast = UI.contrast || 'normal';
+  if (UI.uiscale && UI.uiscale !== 1) ciApplyScale(UI.uiscale);
+  wsApplyVars();
+  const mount = () => { wsMountGrips(); };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount); else mount();
+  setTimeout(mount, 1500);
+})();
+
+/* Anrcy reagiert: Erfolg, Warnung, Erklären (die Oberflächen-Bewegung steuert, ob er sich dabei bewegt) */
+const _ciToast = toast;
+toast = function (msg, type, ms) { const r = _ciToast.apply(this, arguments); try { if (type === 'err') anrcyMood('warning', 2600); else if (type === 'ok') anrcyMood('success', 1500); } catch (e) {} return r; };
+const _ciOpenFaq = openFaq; openFaq = function (...a) { const r = _ciOpenFaq.apply(this, a); try { anrcyMood('explaining', 2600); } catch (e) {} return r; };
+/* Electron kennt kein window.prompt() – im Desktop übernimmt ein kleines Fenster */
+if (window.claudio && window.claudio.promptSync) window.prompt = (m, d) => window.claudio.promptSync(T(String(m == null ? '' : m)), d, I18N.lang);
+
+window.__studio = { loadProject, toast, CMD_ACTIONS, CLOSABLE_MODALS, loadScript, X_CDN, D3_BASE,
+  // für tools/feature-test.mjs (automatische Prüfung der Engine)
+  dev: { MS, D3, CI, VIZ_STYLES, VIZ_PRESETS, GEN_SHADERS, MS_VFX, MOD_SRC, MOD_DST, openMediaStudio, msAddVisualizer, msAddGen, msRender, msFxAt, msSelClip, msAnimated, kfValue, genProg, msBuildInspector,
+    msApplyVfx, msLayer, d3Open, d3Rebuild, d3RenderOpts, d3Fill, d3Defaults, d3Apply, wsSwitch, apApply, renderCmdList, ciMicFrame, msAnalyze, msImportFiles, msAddClip, msDrawVisualizer, d3vEnsure: typeof d3vEnsure === "function" ? d3vEnsure : null, clipLen } };
 
 })();
 
@@ -21250,7 +22309,7 @@ window.__studio = { loadProject, toast, CMD_ACTIONS, CLOSABLE_MODALS, loadScript
    window.claudio is provided by the desktop app's preload script; in a plain
    browser the page still works and checks GitHub releases for a newer build.
    ════════════════════════════════════════════════════════ */
-const CLAUDIO_VERSION = '1.0.1';
+const CLAUDIO_VERSION = '1.1.0';
 const CLAUDIO_REPO = 'GPTmadeit/claud.io';
 (function () {
   const D = window.claudio || null, html = document.documentElement, S = window.__studio || {};
@@ -21280,6 +22339,7 @@ const CLAUDIO_REPO = 'GPTmadeit/claud.io';
     <p class="ab-credit">Created by <b>ANRCY</b></p>
     <p class="hint-txt" style="margin:0">Design, video, audio-reactive visuals and 3D in one studio.</p>
     <div class="ab-upd"><span id="abUpdTxt">${D ? 'Updates are installed automatically from GitHub.' : 'You are using the browser version.'}</span><div class="ab-bar" id="abBar"><i></i></div></div>
+    <div class="about-gpu" id="abGpu"><span id="abGpuTxt">Graphics: checking…</span></div>
     <div class="modal-actions" style="justify-content:center;flex-wrap:wrap">
       <button class="tbtn" id="abCheck">Check for updates</button>
       <button class="tbtn primary" id="abInstall" hidden>Restart &amp; update</button>
@@ -21287,7 +22347,26 @@ const CLAUDIO_REPO = 'GPTmadeit/claud.io';
     </div></div>`;
   document.body.appendChild(bg);
   const $a = s => bg.querySelector(s), txt = $a('#abUpdTxt'), bar = $a('#abBar'), btnI = $a('#abInstall'), btnC = $a('#abCheck');
-  function openAbout() { bg.classList.add('show'); }
+  // Graphics / hardware acceleration status
+  async function gpuStatus() {
+    const box = $a('#abGpu'), t = $a('#abGpuTxt');
+    let renderer = ''; try { const gl = document.createElement('canvas').getContext('webgl'); const ext = gl && gl.getExtension('WEBGL_debug_renderer_info'); renderer = gl ? String(ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER)) : ''; } catch (e) {}
+    const soft = !renderer || /swiftshader|llvmpipe|software|basic render/i.test(renderer);
+    const short = s => String(s || '').replace(/^ANGLE \((.*)\)$/, '$1').replace(/,? ?(Direct3D|D3D)\S*.*$/i, '').replace(/\s+\(0x[0-9a-f]+\)/ig, '').replace(/,?\s*OpenGL.*$/i, '').replace(/^(Intel|AMD|NVIDIA), (Mesa )?/i, '').trim();
+    if (D && D.gpu) {
+      let info = null; try { info = await D.gpu.info(); } catch (e) {}
+      const on = D.gpu.enabled, st = (info && info.status) || {}, hw = k => /enabled/.test(st[k] || '') && !/software/.test(st[k] || '');
+      const dev = short((info && info.device) || renderer);
+      t.innerHTML = on ? (soft ? '<b>Software rendering</b> – the graphics driver is not available.' : `<b>Hardware accelerated</b>${dev ? ' · ' + dev.replace(/[<>&]/g, '') : ''}<br>3D/WebGL ${hw('webgl') ? '✓' : '–'} · Canvas ${hw('2d_canvas') ? '✓' : '–'} · Video decode ${hw('video_decode') ? '✓' : '–'} · Encode ${hw('video_encode') ? '✓' : '–'}`)
+        : '<b>Hardware acceleration is off</b> – 3D and video export run on the CPU.';
+      let b = $a('#abGpuBtn'); if (!b) { b = document.createElement('button'); b.className = 'mini'; b.id = 'abGpuBtn'; box.appendChild(b);
+        b.addEventListener('click', () => { const next = !D.gpu.enabled; if (confirm(next ? 'Turn hardware acceleration on? Claud.io restarts.' : 'Turn hardware acceleration off? Use this only if 3D or video looks broken. Claud.io restarts.')) D.gpu.set(next); }); }
+      b.textContent = on ? 'Turn off' : 'Turn on';
+    } else {
+      t.innerHTML = soft ? '<b>Software rendering</b> – turn on hardware acceleration in your browser settings for smooth 3D and video.' : `<b>Hardware accelerated</b> · ${short(renderer).replace(/[<>&]/g, '')}`;
+    }
+  }
+  function openAbout() { bg.classList.add('show'); gpuStatus(); }
   function closeAbout() { bg.classList.remove('show'); }
   window.openAbout = openAbout;
   bg.addEventListener('click', e => { if (e.target === bg) closeAbout(); });

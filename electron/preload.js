@@ -9,6 +9,13 @@ contextBridge.exposeInMainWorld('claudio', {
   platform: process.platform,
   openExternal: url => ipcRenderer.send('open-external', String(url)),
   onOpenFile: cb => { fileListeners.push(cb); ipcRenderer.send('renderer-ready'); },
+  gpu: {
+    enabled: ipcRenderer.sendSync('gpu-enabled'),
+    info: () => ipcRenderer.invoke('gpu-info'),
+    set: on => ipcRenderer.send('gpu-set', !!on),
+  },
+  promptSync: (message, def, lang) => ipcRenderer.sendSync('prompt-sync', String(message == null ? '' : message), def == null ? '' : String(def), lang === 'de' ? 'de' : 'en'),
+  setZoom: k => ipcRenderer.send('zoom-set', +k),
   update: {
     check: () => ipcRenderer.send('update-check'),
     install: () => ipcRenderer.send('update-install'),
